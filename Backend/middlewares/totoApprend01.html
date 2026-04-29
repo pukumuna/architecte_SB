@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Apprentissage POO</title>
+</head>
+<body>
+    
+</body>
+<script>
+    //Declaration inline d'un objet JS 
+    var Addition = {
+        x : 5,
+        y : 10,
+        calcul : function() { return this.x + this.y}
+    }
+    // constructeur 
+    var Voiture = function() {
+        //Attribut de l'objet
+        this.possederMoteur = true;
+    }
+    Voiture.prototype.avancer = function() {
+        //fonction de l'objet
+        return "avance <br />";
+    }
+    Voiture.prototype.reculer = function() {
+        //fonction de l'objet
+        return "recule <br />";
+    }
+
+    document.write("Somme :" + Addition.calcul() + "<br />");
+     
+    var simca1100 = new Voiture();
+    var renault12 = new Voiture();
+    document.write("renault12 : " + renault12.avancer() + "<br />"); 
+    console.log("ren :" + renault12.avancer);
+    document.write("simca1100 : " + simca1100.avancer() + "<br />"); 
+    console.log("sim :" + simca1100.avancer);
+    if (renault12.avancer == simca1100.avancer) 
+       {document.write("OK")} else {document.write("KO")}
+</script>
+</html>

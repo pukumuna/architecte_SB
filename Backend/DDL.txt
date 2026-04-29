@@ -1,0 +1,12 @@
+Listening on port 5678
+Executing (default): CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `email` VARCHAR(255) NOT NULL UNIQUE, `password` VARCHAR(255) NOT NULL);
+Executing (default): PRAGMA INDEX_LIST(`users`)
+Executing (default): PRAGMA INDEX_INFO(`sqlite_autoindex_users_1`)
+
+Executing (default): CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` VARCHAR(255) NOT NULL UNIQUE);
+Executing (default): PRAGMA INDEX_LIST(`categories`)
+Executing (default): PRAGMA INDEX_INFO(`sqlite_autoindex_categories_1`)
+
+Executing (default): CREATE TABLE IF NOT EXISTS `works` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` VARCHAR(255) NOT NULL, `imageUrl` VARCHAR(255) NOT NULL, `categoryId` INTEGER REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE, `userId` INTEGER REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE);
+Executing (default): PRAGMA INDEX_LIST(`works`)
+db is ready

@@ -22,7 +22,6 @@ exports.signup = async (req, res) => {
 			message: err.message
 		});
 	}
-
 }
 
 exports.login = async (req, res) => {

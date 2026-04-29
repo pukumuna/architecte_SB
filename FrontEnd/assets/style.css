@@ -1,6 +1,7 @@
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
+   http://localhost:5678/api-docs ::: Consulation Regle acces BD SQLITE
 */
 
 html, body, div, span, applet, object, iframe,
@@ -23,6 +24,20 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+  }
+
+  body {
+	font-family: 'Syne', 'Work Sans', sans-serif;
+	overflow-x: hidden; /* Empêche le débordement horizontal */
+	margin: 0 auto;
+    padding: 0 0px;
+  }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -75,7 +90,15 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
+}
+
+
+header h1 {
+	margin-left: 50px;
+}
+
+header nav {
+	margin-right: 50px;
 }
 
 h2{
@@ -88,7 +111,7 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
+	
 }
 nav li {
 	padding: 0 10px;
@@ -101,6 +124,7 @@ li:hover {
 #introduction {
 	display: flex;
 	align-items: center;
+	margin-bottom: 80px;
 }
 #introduction figure {
 	flex: 1
@@ -121,11 +145,17 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
+.portfolio {
+	top: 500px;
+	background: rgba(0, 0, 0, 0.6);
+}
+
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
 }
-.gallery {
+.maxGallery {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -133,20 +163,20 @@ li:hover {
 	grid-row-gap: 20px;
 }
 
-.gallery img {
+.maxGallery img {
 	width: 100%;
 
 }
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
 #contact > * {
 	text-align: center;
 
 }
 #contact h2{
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 #contact form {
 	text-align: left;
@@ -155,27 +185,40 @@ margin: auto;
 	flex-direction: column;
 }
 
-#contact input {
-	height: 50px;
-	font-size: 1.2em;
+#contact input[type="text"],
+		 input[type="email"]  {
+	height: 18px; 
+	font-size: 1em;
 	border: none;
+	padding: 15px;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 #contact label {
-	margin: 2em 0 1em 0;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin: 1em 0 1em 0;
 }
+
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+
 #contact textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+#contact input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
+	padding: 14px 24px;
+	font-size: 1em;
 	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
+	margin : 1em auto ;
 	text-align: center;
 	border-radius: 60px ;
 }
@@ -186,3 +229,495 @@ footer nav ul {
 	margin: 2em
 }
 
+#catgProjet {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+
+
+/* -------------------------------------- ********************* -------------------------------- */
+/* -------------------------------------- Gestion Fenetre Login -------------------------------- */
+/* -------------------------------------- ********************* -------------------------------- */
+
+#connexion {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#connexion h2 {
+    flex : 1;
+    justify-content: center;
+	color: #01796F;
+	margin-bottom: 50px;
+}
+
+#connexion h3 {
+    flex : 1;
+    justify-content: center;
+	font-size: 10px;
+	font-weight: 100;
+}
+
+#connexion h3 a:hover{
+	color: #01796F;
+	text-decoration: underline;
+}
+
+#connexion input[type="submit"]{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	padding: 10px 18px;
+	font-size: 1em;
+	background-color: #1D6154;
+	margin : 1em auto ;
+	text-align: center;
+	border-radius: 60px ;
+	display: flex;
+	margin-top: 20px;
+}
+
+#connexion input[type="password"],
+		 input[type="email"]  {
+	width: 280px;
+	height: 18px; 
+	font-size: 1em;
+	border: none;
+	padding: 15px;
+	margin-bottom: 20px;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+#connexion label {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin: 1em 0 1em 0;
+}
+
+/**/
+
+
+.form-group input {
+	border: 1px solid wheat;
+	border-radius: 4px;
+	font-size: 14px;
+  }
+
+  form {
+    flex : 1;
+  }
+
+  #errorMessage {
+	
+	font-size: 10px;
+	margin-top: 8px;
+  }
+
+  #errorMessage.rouge {
+	color: red;   
+  }
+
+  #errorMessage.vert {
+	color: green;   
+  }
+
+
+  .nave {
+	text-decoration: none;
+  } 
+/* -------------------------------------- ********************* -------------------------------- */
+/* -------------------------------------- Gestion Fenetre Modal -------------------------------- */
+/* -------------------------------------- ********************* -------------------------------- */
+/* Popup Galerie */
+
+.modEntete {
+	width : 100%;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #fff;
+	background:  rgba(0, 0, 0, 0.98); 
+}
+
+.modEdit {
+	display: flex;
+	padding: 5px 0;
+}
+
+.modEdit .fa-edit {
+	color: #fff;
+}
+
+.editColor {
+	color: #000;
+}
+
+#spanEdit {
+	 font-size: 14px;
+	 margin-left: 8px;
+}
+
+ 
+#EditProjets {
+	display: flex;
+	justify-content: center;
+	gap : 30px;
+	align-items: center;
+}
+
+.editer .fa-edit {
+	font-size: 15px;
+	color: #1D6154
+}
+
+.editer {
+	margin-bottom: 20px;
+	color: #1D6154
+}
+
+.popup-header, .retour-grille {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    position: relative;
+}
+
+.popup-header .close-popup {
+	display: flex;
+    font-size: 1.5rem;
+	border: none;
+    cursor: pointer;
+	position: absolute;
+	top: 5px;
+	right: 15px;
+	background-color: white;
+}
+
+.retour-grille .fa-arrow-left {
+	display: flex;
+    font-size: 1.2rem;
+	border: none;
+    cursor: pointer;
+	position: absolute;
+	top: 5px;
+	left: 15px;
+	background-color: white;
+}
+
+.popup-content-modal {
+	position: absolute;
+    top: 520px;
+    left: 25%;
+	margin-top: 50px;
+    display: block;
+	width: 50%;
+	height: 100vh;
+	border-radius: 5px;
+	background: rgba(255, 248, 240, 0.95); /* couleur blanc laiteux */
+}
+
+.popup-content1  {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-content2  {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-content1 h2,
+.popup-content2 h2 {    
+    text-align: center;
+	margin:40px auto;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.popup-grid1 {
+	display: grid;
+	margin-left: 7%;
+    grid-template-columns: repeat(5, 1fr);
+	/*grid-column-gap: 8px;
+	grid-row-gap: 2px;*/
+	grid-gap: 20px 1px;
+	max-height: 80vh; /* max 80% de la hauteur écran */
+    overflow-y: auto;
+}   
+
+
+.popup-grid2 {
+    display: flex;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.popup-grid1 img {
+	width: 85%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.popup-grid2 img {
+	width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content1 .ajoutPhoto {
+	background-color: rgb(9, 77, 65);
+	color:white;
+	padding: 6px 36px;
+	border-radius: 25px;
+}
+.popup-content1 .splitPhoto {
+	display: flex;
+	margin-bottom: 12px;
+	justify-content: center;
+}
+
+.popup-content1 hr {
+    width: 86%;
+	margin: 30px auto;
+    color:white; 
+    height:1px;
+    background:rgb(200, 197, 197);
+     
+}
+
+.hidden {
+    display: none;
+}
+
+.sombre {
+    background: rgba(#bcbbbb, 0.5);
+}
+
+/*.fa-trash-can .trash-icon .fas { */
+.fa-trash-can  { 
+	cursor: pointer;
+	background: rgba(0,0,0, 0.8); 
+	color:white;
+	padding: 5px;
+	border-radius: 25%;
+	font-size: 14px;
+} 
+
+.divrelate {
+	position: relative;
+	width: 90px;
+	height: 110px;
+  /*display: flex; */
+}
+
+.divicone {
+	position: absolute;
+	top: 10px;
+	right: 22px;
+	display: flex;
+} 
+ 
+
+/*      ******************************* Partie Photo ****************************    */
+#uploadForm p {
+	font-size: 1em;
+	font-weight: 1em;
+	font-style: italic;
+	text-align: center;
+}
+
+.upload-section {
+	width:60%;   
+	/*height: auto; /* ajouté */
+	height: 30%;
+	display: flex;
+	margin: 0 auto;
+	flex-direction: column;
+	justify-content:center;
+	align-items: center;
+	background-color: #d3d3d3;
+	padding: 20px;
+	/*margin-bottom: 20px;*/
+	text-align: center;
+	border-radius: 5px;
+}
+
+.upload-section img {
+	/*margin: 0 auto;
+	margin-top: 4%;
+	margin-left: 24%; */
+	margin: auto;
+	width: 60% ;
+	height: 96%;
+	/*max-width: 250px;   
+	max-height: 170px;*/
+}
+
+.icon-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+
+.icon-container .fa-photo-film {
+	font-size: 24px;
+	color: #666;
+	border: 3px solid #666;
+	border-radius: 8px;
+	padding: 10px;
+	margin-top: 1px;
+}
+
+.add-photo-btn {
+	background-color: #666;
+	color: white;
+	border: none;
+	padding: 10px 30px;
+	font-size: 12px;
+	border-radius: 25px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+.btn-photo  {
+	margin-top : 20px;
+	margin-bottom : 12px;
+}
+
+.btn-photo input {
+	font-size: 8px;
+}
+
+.btn-photo label {
+	background-color: #a8a8ab;
+    font-size: 10px;
+    padding: 7px 17px;
+	cursor: pointer;
+    border-radius: 25px;
+}
+
+.btn-photo button {
+	background-color: #a8a8ab;
+    font-size: 10px;
+    padding: 7px 17px;
+	cursor: pointer;
+    border-radius: 25px;
+}
+
+.btn-submit  {
+	/*background-color: #9e9eb0; */
+	display : flex ;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn-submit input[type="submit"] {
+	/*background-color: #9e9eb0; */
+	margin : 2em auto ;
+	width: 180px;
+	font-size: 10px;
+	text-align: center;
+	border-radius: 25px ;
+}
+
+.upload-info {
+	font-size: 8px;
+	color: #555;
+	margin-top: 5px;
+}
+
+.btn-submit input[type="submit"].remplir {
+	background-color: #9e9eb0 !important;
+}
+
+.btn-submit input[type="submit"].enabled {
+	background-color: green !important;
+}
+
+.form-section {
+	width: 60%;
+	margin: 0 auto;
+	background-color: #fff;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.form-section label {
+	display: block;
+	color: #000;
+	margin-top: 5%;
+	font-size: 14px;
+}
+
+.form-section input,
+.form-section select {
+	width: calc(100% - 20px);
+	padding: 10px;
+	margin-bottom: 10px;
+	font-size: 12px;  
+	height: 40px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09); 
+}
+
+.form-section select option {
+	font-size: 12px;
+}
+ 
+.form-section hr {
+	border: none;
+	border-top: 1px solid #ccc;
+	margin: 20px 0;
+}
+
+/********* CATEGORIES ****************************************************************/
+.categFiltre {
+	display: flex;
+	margin-bottom: 25px;
+}
+
+  .categNormal {
+	background-color: #fafafa;
+	color: rgb(3, 77, 3) ;
+	padding: 6px 12px;
+	display:flex;
+	margin: 0 10px;
+	justify-content: center;
+	border: 1px solid #011f08b3; /* Bordure */
+	border-radius: 25px; /* Coins arrondis */
+	box-shadow: 0 4px 8px rgba(8, 68, 1, 0.1); /* Ombre */
+	text-align: center;
+	font-family: Arial, sans-serif;
+	font-size: .0.6em;
+	font-weight: 600;
+	text-decoration: none;
+  }
+  
+  .categActive {
+	background-color: green;
+	color: white;
+	cursor: pointer;
+  }
+  
+  footer nav {
+	padding: 10px;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 2em;
+	display:flex;
+  }
+  /********* CATEGORIES ****************************************************************/
+/* **
