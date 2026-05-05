@@ -70,7 +70,7 @@ for (let i=0; i < categories.length; i++) {
 
 //Affichage dynamique de la liste des Travaux de Architecte
 function afficherTravaux(projets) {
-    
+       
     galery.innerHTML = ``;
      
     for (let i=0; i < projets.length; i++) {

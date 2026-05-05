@@ -31,13 +31,6 @@ time, mark, audio, video {
 	box-sizing: border-box;
   }
 
-  body {
-	font-family: 'Syne', 'Work Sans', sans-serif;
-	overflow-x: hidden; /* Empêche le débordement horizontal */
-	margin: 0 auto;
-    padding: 0 0px;
-  }
-
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -63,9 +56,10 @@ table {
 }
 /** end reset css**/
 body {
+	/*overflow-x: hidden; *//* Empêche le débordement horizontal */
 	max-width: 1140px;
 	margin:auto;
-	font-family: 'Work Sans' ;
+	font-family: 'Syne', sans-serif;
 	font-size: 14px;
 }
 header {
@@ -92,7 +86,7 @@ h1 > span {
 	letter-spacing: 0.1em;
 }
 
-
+/* garder le positionnement originelle
 header h1 {
 	margin-left: 50px;
 }
@@ -100,12 +94,13 @@ header h1 {
 header nav {
 	margin-right: 50px;
 }
+*/
 
 h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
 }
 nav ul {
 	display: flex;
@@ -165,8 +160,8 @@ li:hover {
 
 .maxGallery img {
 	width: 100%;
-
 }
+
 #contact {
 	width: 50%;
 	margin: auto;
@@ -175,8 +170,9 @@ li:hover {
 	text-align: center;
 
 }
+
 #contact h2{
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 #contact form {
 	text-align: left;
@@ -186,39 +182,33 @@ li:hover {
 }
 
 #contact input[type="text"],
-		 input[type="email"]  {
-	height: 18px; 
-	font-size: 1em;
+		 input[type="email"] {
+	width: 380px;
+	height: 50px;
+	font-size: 1.2em;
 	border: none;
-	padding: 15px;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
+
+
 #contact label {
-	font-size: 1.2em;
-	font-weight: bold;
-	margin: 1em 0 1em 0;
+	margin: 2em 0 1em 0;
 }
-
-.form-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2px;
-}
-
-
 #contact textarea {
 	border: none;
+	width: 380px;
+	height: 174px;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-#contact input[type="submit"]{
+input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
-	padding: 14px 24px;
-	font-size: 1em;
 	background-color: #1D6154;
-	margin : 1em auto ;
+	margin : 2em 8em;
+	padding: 10px 0; 
+	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
 }
@@ -243,28 +233,34 @@ footer nav ul {
 /* -------------------------------------- ********************* -------------------------------- */
 
 #connexion {
+	width: 50%;
+	margin: 242px auto 37px;
+}
+
+#connexion {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
 }
 
 #connexion h2 {
-    flex : 1;
-    justify-content: center;
-	color: #01796F;
-	margin-bottom: 50px;
+    text-align: center;
+	color: #1D6154;
+	margin: auto;
+	margin-bottom: 30px;
 }
 
 #connexion h3 {
     flex : 1;
-    justify-content: center;
-	font-size: 10px;
-	font-weight: 100;
+    text-align: center;
+	font-size: 14px;
+	font-weight: 500;
+	font-family: 'work sans';
+	color: #3d3d3d; 
 }
 
 #connexion h3 a:hover{
-	color: #01796F;
+	
 	text-decoration: underline;
 }
 
@@ -272,7 +268,7 @@ footer nav ul {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
-	padding: 10px 18px;
+	/*padding: 10px 18px; */
 	font-size: 1em;
 	background-color: #1D6154;
 	margin : 1em auto ;
@@ -280,39 +276,29 @@ footer nav ul {
 	border-radius: 60px ;
 	display: flex;
 	margin-top: 20px;
-}
+} *
 
 #connexion input[type="password"],
 		 input[type="email"]  {
-	width: 280px;
-	height: 18px; 
-	font-size: 1em;
+	width: 380px;
+	height: 50px; 
 	border: none;
-	padding: 15px;
 	margin-bottom: 20px;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
+	
 #connexion label {
-	font-size: 1.2em;
-	font-weight: bold;
-	margin: 1em 0 1em 0;
+	/*font-size: 1.2em;
+	font-weight: bold;*/
+	/*margin: 38px;*/
+	margin: 38px auto 0;
 }
-
-/**/
-
-
-.form-group input {
-	border: 1px solid wheat;
-	border-radius: 4px;
-	font-size: 14px;
-  }
 
   form {
     flex : 1;
   }
 
   #errorMessage {
-	
 	font-size: 10px;
 	margin-top: 8px;
   }
@@ -336,32 +322,51 @@ footer nav ul {
 
 .modEntete {
 	width : 100%;
-	height: 50px;
+	height: 60px;
 	display: flex;
 	justify-content: center;
-	align-items: center;
 	color: #fff;
+	border: 5px solid transparent;
+	transition: background-color 0.2s;
 	background:  rgba(0, 0, 0, 0.98); 
+}
+
+.modEntete:hover {
+  border-color: #941a80;
 }
 
 .modEdit {
 	display: flex;
+	align-items: center;
+	color: #fff;
+	gap:15px;
+}
+
+/*
+.modEdit {
+	display: flex;
 	padding: 5px 0;
 }
+*/
 
 .modEdit .fa-edit {
 	color: #fff;
 }
 
-.editColor {
-	color: #000;
+/*.modEdit .fas, .fa-edit {*/
+.modEdit i {
+	font-size: 20px;
 }
 
 #spanEdit {
-	 font-size: 14px;
-	 margin-left: 8px;
+	font-family: "work sans";
+	font-weight: 400;
+	font-size: 20px;
 }
-
+ 
+.editColor {
+	color: #000; 
+}  
  
 #EditProjets {
 	display: flex;
@@ -372,8 +377,9 @@ footer nav ul {
 
 .editer .fa-edit {
 	font-size: 15px;
-	color: #1D6154
+	/*color: #1D6154*/
 }
+
 
 .editer {
 	margin-bottom: 20px;
@@ -387,38 +393,75 @@ footer nav ul {
     position: relative;
 }
 
-.popup-header .close-popup {
-	display: flex;
-    font-size: 1.5rem;
-	border: none;
-    cursor: pointer;
-	position: absolute;
-	top: 5px;
-	right: 15px;
-	background-color: white;
+
+.sombre {
+	background: rgba(255, 255, 255, 0.1); /* Blanc laiteux 05-05-26*/
+}
+.sombre input,
+.sombre textarea {
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.retour-grille .fa-arrow-left {
+.sombre input[type="submit"]{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em 8em;
+	padding: 10px 0; 
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+.popup-header .close-popup {
 	display: flex;
-    font-size: 1.2rem;
+    font-size: 2.5rem;
 	border: none;
     cursor: pointer;
 	position: absolute;
-	top: 5px;
-	left: 15px;
+	top: 20px;
+	right: 20px;
 	background-color: white;
+	width: 30px;
+  	height: 30px;
+	border: 2px solid transparent;
+	transition: background-color 0.2s;
+  	justify-content: center;
+  	align-items: center;
+}
+.close-popup:hover {
+  border-color: #3498db;
+  color: #000000;
+}
+
+.fa-arrow-left {
+	display: flex;
+    font-size: 1.8rem;
+	border: none;
+    cursor: pointer;
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	background-color: white;
+	border: 2px solid transparent;
+	transition: background-color 0.2s;
+}
+.fa-arrow-left:hover {
+  border-color: #3498db;
+  color: #000000;
 }
 
 .popup-content-modal {
 	position: absolute;
-    top: 520px;
-    left: 25%;
-	margin-top: 50px;
+    top: 580px;
+    left: 23.5%;
     display: block;
-	width: 50%;
+	width: 53.0%;
 	height: 100vh;
-	border-radius: 5px;
-	background: rgba(255, 248, 240, 0.95); /* couleur blanc laiteux */
+	border-radius: 10px;
+	background: rgba(255, 255, 255); /* 05-05-26*/
+	/*background: rgba(255, 248, 240, 0.95); /* couleur blanc laiteux 05-05-26*/
 }
 
 .popup-content1  {
@@ -438,41 +481,33 @@ footer nav ul {
 .popup-content1 h2,
 .popup-content2 h2 {    
     text-align: center;
-	margin:40px auto;
-	font-size: 1.2rem;
-	font-weight: bold;
+	margin:90px auto 40px;
+	font-size: 26px;
+	font-weight: 400;
+	font-family: 'work sans';
 }
 
 .popup-grid1 {
 	display: grid;
-	margin-left: 7%;
-    grid-template-columns: repeat(5, 1fr);
-	/*grid-column-gap: 8px;
-	grid-row-gap: 2px;*/
-	grid-gap: 20px 1px;
+    grid-template-columns: repeat(5, 77px);
+	grid-column-gap: 25px;
+	grid-row-gap: 40px;
+	/*gap:20px;*/
+	justify-content: center;
 	max-height: 80vh; /* max 80% de la hauteur écran */
-    overflow-y: auto;
+    /*overflow-y: auto; */
 }   
 
-
-.popup-grid2 {
-    display: flex;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
 .popup-grid1 img {
-	width: 85%;
-    height: auto;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.popup-grid2 img {
 	width: 100%;
     height: auto;
-    border-radius: 5px;
+    border-radius: 1px;
+	border: 3px solid transparent;
+  	transition: border-color 0.2s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.popup-grid1 img:hover {
+  border-color: #3498db;
 }
 
 .popup-content1 .ajoutPhoto {
@@ -526,7 +561,13 @@ footer nav ul {
 	top: 10px;
 	right: 22px;
 	display: flex;
+	border: 3px solid transparent;
 } 
+
+.divicone:hover {
+  border-color: #3498db;
+}
+
  
 
 /*      ******************************* Partie Photo ****************************    */
@@ -711,7 +752,7 @@ footer nav ul {
 	color: white;
 	cursor: pointer;
   }
-  
+/*  
   footer nav {
 	padding: 10px;
 	justify-content: center;
@@ -719,5 +760,6 @@ footer nav ul {
 	font-size: 2em;
 	display:flex;
   }
+*/
   /********* CATEGORIES ****************************************************************/
 /* **

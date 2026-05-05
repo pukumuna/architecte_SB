@@ -157,6 +157,7 @@ function chargtPopupGrid1() {
         const projet = works[i];
         const figure = document.createElement("div");
         figure.classList.add("divrelate");
+        
         const image = document.createElement("img");
         image.setAttribute("object-fit","cover");
         image.src=projet.imageUrl;
