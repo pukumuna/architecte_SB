@@ -78,6 +78,7 @@ function afficherTravaux(projets) {
         const figure = document.createElement("figure");
         const image  = document.createElement("img");
         const caption = document.createElement("figcaption");
+        caption.classList.add("titrImage");
         image.src=projet.imageUrl;
         image.alt=projet.title; 
         caption.innerText=projet.title;

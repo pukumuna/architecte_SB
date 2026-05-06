@@ -536,6 +536,7 @@ closePopup1.addEventListener("click", (event) => {
     window.localStorage.removeItem('works');                                 // 20/01/25 Delete
     window.location.reload();
 });
+
 // Fermeture de la Modale : popup-content2
 console.log("execution de la fonction modale: 6 ?");
 let closePopup2 = document.querySelector(".popup-content2 .close-popup"); 
