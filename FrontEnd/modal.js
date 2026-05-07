@@ -73,6 +73,7 @@ function afficherTravaux() {
         image.src=projet.imageUrl;
         image.alt=projet.title; 
         caption.innerText=projet.title;
+        caption.classList.add("titrImage");
         figure.appendChild(image); 
         figure.appendChild(caption);
 
@@ -253,7 +254,7 @@ function controleData() {
      // Vérification de fichier
     if (!file) {
         isValid = false;
-        messErreur.push('Veuillez sélectionner un fichier.');
+        messErreur.push('Veuillez sélectionner une image');
     }
     else {
         console.log("file-de-controleData : " 
@@ -363,10 +364,22 @@ afficherTravaux();
 let edition = document.getElementById("fenetre");  
 edition.addEventListener("click", (event) => { //Fenetre Affiche Modale
         console.log("execution de la fonction modale:1"); 
-    
-        document.querySelector("#boiteModal").classList.remove("hidden");                                    
-        document.body.style.backgroundColor = "rgba(178, 189, 189, 0.8)";
-
+        document.querySelector(".popup-content1").classList.add("active");
+        document.querySelector("#boiteModal").classList.remove("hidden");
+        // Changement 07-05-26                                    
+        //document.body.style.backgroundColor = "rgba(178, 189, 189, 0.8)";
+        //let main = document.querySelector("main");
+        let body = document.querySelector("body");
+        let inputa = document.querySelector("#contact textarea");
+        let inputt = document.querySelector("#contact input[type='text']");
+        let inputm = document.querySelector("#contact input[type='email']");
+        
+        //main.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+        inputa.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+        inputm.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+        inputt.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+                
         document.querySelector(".popup-content2").classList.add("hidden");
         document.querySelector(".popup-content1").classList.remove("hidden");
 
@@ -377,8 +390,9 @@ edition.addEventListener("click", (event) => { //Fenetre Affiche Modale
         document.querySelector(".optSelect").setAttribute("name",""); // 20-01-25
 
         chargtCategories();                                // 19/03/26
-        
-        chargtPopupGrid1();                                // 23-02-26   
+         
+        chargtPopupGrid1();                                // 23-02-26 
+          
     
 });  // Fin d'exécution de la 1er modale
 
@@ -442,12 +456,7 @@ formulaire.addEventListener("submit", async function (event) {
     }
 
     controleData();
-    /*
-    console.log("namefile:" + fileInput.files[0].name);
-    console.log("titlefile:" + titleInput.value.trim());
-    console.log("categorie-id mama:" + optSelect.getAttribute("id"));
-    console.log("categorie-nm mama:" + optSelect.getAttribute("name"));
-    */
+    
     let userEnr = window.localStorage.getItem('user');
     let userParse = JSON.parse(userEnr);
     let useridIsrt = userParse.userId;
@@ -536,11 +545,36 @@ closePopup1.addEventListener("click", (event) => {
     window.localStorage.removeItem('works');                                 // 20/01/25 Delete
     window.location.reload();
 });
+/* On écoute le click sur la div "popupImg" 
+let popupImg = document.querySelector(".popup-content1"); 
+popupImg.addEventListener("click", (event) => {
+    console.log("Detection : popupImg");
+    // clic à l'extérieur du popup
+    if (event.target === popupImg) {
+        console.log("succes de fermeture : popupImg");
+        popupImg.classList.remove("active");
+        window.localStorage.removeItem('works');                                 // 20/01/25 Delete
+        window.location.reload();
+    }
+});  */
+
+let content = document.querySelector(".popup-content-modal");
+// Fermer si clic en dehors du contenu
+content.addEventListener("click", function (event) {
+    console.log("Detection : popupImg");
+    if (event.target === content) {
+      console.log("succes de fermeture : popupImg");  
+      modale.style.visibility = "hidden";
+      modale.setAttribute("aria-hidden", "true");
+    }
+});
+
 
 // Fermeture de la Modale : popup-content2
-console.log("execution de la fonction modale: 6 ?");
+
 let closePopup2 = document.querySelector(".popup-content2 .close-popup"); 
 closePopup2.addEventListener("click", (event) => {
+    console.log("execution de la fonction modale: 6 ?");
     // redirige vers la page indexModal.html
     window.localStorage.removeItem('works');                                 // 20/01/25 Delete
     window.location.reload();

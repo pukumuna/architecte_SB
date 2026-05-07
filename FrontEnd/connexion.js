@@ -2,6 +2,8 @@
 let userAdmin = "";
 let wlstUser = "";
 let user = "";
+const errorMessage = document.getElementById("errorMessage");
+
 async function initAdmin() {   
 
     //Récupération du Token de l'Administrateur eventuellement du localStorage
@@ -25,11 +27,7 @@ async function initAdmin() {
         // Stockage des informations dans le localStorage (sorte de sauvegarde light)
         window.localStorage.setItem("user", wlstUser);
     }    
-    /*
-    userAdmin = JSON.parse(window.localStorage.getItem("user"));
-    console.log("user-email : " + userAdmin.email);
-    console.log("user-passd : " + userAdmin.password);
-    console.log("Token setItem : " + userAdmin.token); */
+    
 }    
 
 // Verifier que Email/Password saisis correspond credential/Adminstrateur
@@ -54,7 +52,7 @@ formulaire.addEventListener("submit", async function(event) {
     emel = document.getElementById("email").value.trim();
     passwd = document.getElementById("passwd").value.trim();
 
-    console.log("coucou:" + emel + " " + passwd); 
+    //console.log("coucou:" + emel + " " + passwd); 
     
     user = await fetch("http://localhost:5678/api/users/login", { 
         method: "POST",
@@ -62,8 +60,10 @@ formulaire.addEventListener("submit", async function(event) {
         body: JSON.stringify({email: emel, password: passwd })
     }); 
     userLogin = await user.json(); // Parse JSON
-
+    
     if (userLogin.token == null) {
+        errorMessage.classList.remove("vert");
+        errorMessage.classList.add("rouge");
         erreur("Accès refusé. Email ou mot de passe invalide.");
     } else {
         
@@ -79,11 +79,13 @@ formulaire.addEventListener("submit", async function(event) {
             window.location.href = "indModal.html";
         } else {
         // Sinon, affiche un message d'erreur
-            erreur("Email ou mot de passe invalide. Veuillez réessayer.");
+            errorMessage.classList.remove("vert");
+            errorMessage.classList.add("rouge");
+            erreur("Email ou mot de passe invalide. Veuillez réessayer.");   
         } 
     }
 });
 
 function erreur(message) {
-    document.getElementById("errorMessage").textContent = message; 
+    errorMessage.textContent = message; 
 }
