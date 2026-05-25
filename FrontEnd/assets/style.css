@@ -40,6 +40,26 @@ body {
 	line-height: 1;
 }
 
+body {
+	/*overflow-x: hidden; *//* Empêche le débordement horizontal */
+	max-width: 100vw;
+	margin:auto;
+	font-family: 'Syne', sans-serif;
+	font-size: 14px;
+}
+header {
+	width: 1140px;
+	display: flex;
+	justify-content: space-between;
+	margin: 50px auto;
+}
+
+main {
+	/*overflow-x: hidden; *//* Empêche le débordement horizontal */
+	width: 1140px;
+	margin:auto;
+}
+
 article h2 {
 	font-family: 'work sans';
 	font-weight: 400;
@@ -63,18 +83,7 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
-body {
-	/*overflow-x: hidden; *//* Empêche le débordement horizontal */
-	max-width: 1140px;
-	margin:auto;
-	font-family: 'Syne', sans-serif;
-	font-size: 14px;
-}
-header {
-	display: flex;
-	justify-content: space-between;
-	margin: 50px 0
-}
+
 section {
 	margin: 50px 0
 }
@@ -156,16 +165,7 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
-
-.portfolio {
-	top: 500px;
-	background: rgba(0, 0, 0, 0.6);
-}
-
-#portfolio h2 {
-	text-align: center;
-	margin-bottom: 1em;
-}
+ 
 .maxGallery {
 	width: 100%;
 	display: grid;
@@ -179,7 +179,7 @@ li:hover {
 }
 
 #contact {
-	width: 50%;
+	width: 34%;
 	margin: auto;
 }
 #contact > * {
@@ -235,8 +235,9 @@ footer nav ul {
 	margin: 2em
 }
 
-#catgProjet {
+#categProjet {
 	display: flex;
+	gap : 30px;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
@@ -250,7 +251,7 @@ footer nav ul {
 
 #connexion {
 	width: 50%;
-	margin: 242px auto 37px;
+	margin: 200px auto 37px; /* Mettre à la place de 242 200px*/
 }
 
 #connexion {
@@ -337,10 +338,10 @@ footer nav ul {
 /* Popup Galerie */
 
 .modEntete {
-	width : 100vw;
+	max-width : 1440px;
 	height: 60px;
 	display: flex;
-	margin: 0;
+	margin: auto;
 	justify-content: center;
 	color: #fff;
 	border: 5px solid transparent;
@@ -392,6 +393,10 @@ footer nav ul {
 	align-items: center;
 }
 
+.editer {
+	margin-top: 20px;
+}
+
 .editer .fa-edit {
 	font-size: 15px;
 	/*color: #1D6154*/
@@ -407,32 +412,12 @@ footer nav ul {
 	color: #1D6154
 }
 
+
 .popup-header, .retour-grille {
     display: flex;
     width: 100%;
     align-items: center;
     position: relative;
-}
-
-
-.sombre {
-	background: rgba(255, 255, 255, 0.1); /* Blanc laiteux 05-05-26*/
-}
-.sombre input,
-.sombre textarea {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.sombre input[type="submit"]{
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em 8em;
-	padding: 10px 0; 
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
 }
 
 .popup-header .close-popup {
@@ -473,26 +458,35 @@ footer nav ul {
   color: #000000;
 }
 
-.popup-content-modal {
+#galerie_modal {
+	position: relative;
+}
+
+#boiteModal {  
 	position: absolute;
-    top: 580px;
-    left: 28%;
-    display: block;
-	/*
-	width: 53.0%;
-	height: 100vh;*/
+	top: -120px;      /* remonte sur EditProjets */
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.popup-content-modal {
+	position: relative;
 	width: 630px;
 	height: 770px;
 	border-radius: 10px;
-	background: rgba(255, 255, 255); /* 05-05-26*/
-	/*background: rgba(255, 248, 240, 0.95); /* couleur blanc laiteux 05-05-26*/
+	background: rgba(255, 255, 255);
 }
 
 .popup-content1  {
     width: 100%;
     height: 100vh;
     display: flex;
-	/*overflow-y: auto;*/
+	/*overflow: auto; */
     flex-direction: column;
 }
 
@@ -690,7 +684,7 @@ footer nav ul {
 	color: #fff; 
 	margin : 2em auto ;
 	padding: 20px 80px;
-	padding: 18px 120px 32px 80px;
+	padding: 2px 120px 2px 60px;
 	width: 180px;
 	font-size: 10px;
 	text-align: center;
@@ -782,21 +776,5 @@ footer nav ul {
 	cursor: pointer;
   }
  
-  #boiteModale {  
-	position: fixed;
-  	top: 0;
-  	left: 0;
-  	width: 100%;
-  	height: 100%;
-  	background: rgba(0,0,0,0.5);
-  }
-
-  /* display: flex !important;  */
-.active {
-    display: flex !important;   
-}
-
-
-
   /********* CATEGORIES ****************************************************************/
 /* **

@@ -1,12 +1,26 @@
+import { chargerWorks, chargerCategories } from "./acces.js";
+
+let isrtCateg = [];
+let menuLog = document.getElementById("menuIndex");
+
+let modEntete = document.querySelector(".modEntete");
+modEntete.innerHTML = `
+        <div class="modEdit">
+		    <i class="fas fa-edit"></i>
+		    <span id="spanEdit">Mode édition</span>
+	    </div>
+    `;
+
+let maxGalery = document.querySelector(".maxGallery");    
+    
+const boiteModal = document.getElementById("boiteModal"); 
+
 //Variable Gallerie et icone
-let works = "";
-let idel = ""; // Contient index image miniature supprimée
-const galery = document.querySelector(".popup-grid1");      // 27-02-26
-const maxGalery = document.querySelector(".maxGallery");    // 27-02-26
-const uploadSection = document.querySelector('.upload-section'); // 27-02-26
-let fileInput = document.getElementById("fileImg");
- 
-const modale = document.getElementById("boiteModal");
+let works;
+const galery = document.querySelector(".popup-grid1");      
+const uploadSection = document.querySelector('.upload-section');
+const fileInput = document.getElementById("fileImg");
+
 
 // Traitement de la saisie Ajout Photo des Projets 
 const titleInput = document.getElementById("title");
@@ -14,53 +28,38 @@ const statous    = document.getElementById("statous");
 //const fileInput  = document.getElementById("fileImg");
 const chargList  = document.querySelector("#lstcateg");
 
-const optSelect  = document.querySelector(".optSelect");
 const submitBtn  = document.getElementById("submitBtn");
 const errorMessage = document.getElementById("errorMessage");
 
-// Chargement de works
-let wlstWorks = window.localStorage.getItem('works');
+/* ================================================================= */
 
-if (wlstWorks === null) {
-     
-    let reponse = await fetch("http://localhost:5678/api/works")
-                .then(works => works.json());
+
+
+// ----------------Fin interpolation de ajout dynamique menuLOg * Aside pour popup -----------------//
+
+//Récupération des categories eventuellement stockées dans le localStorage
+async function misefTravaux() {
+
+   await chargerWorks();
     
-    // Transformation des works de JSON en String(sérialiser)
-    wlstWorks = JSON.stringify(reponse);
-
-    // Stockage des informations dans le localStorage (sorte de sauvegarde light)
-    window.localStorage.setItem("works", wlstWorks);    
+   works = JSON.parse(localStorage.getItem("works"));
+   console.log("Test works local store : " + works[0].title);
+   afficherGalery(works); 
 }
 
-//Récupération des works eventuellement stockées dans le localStorage
-if ((works = JSON.parse(wlstWorks)) === null) {
-    arretTraitement();
-} 
+misefTravaux();
 
-let wlstCategories = window.localStorage.getItem('categories');
-if (wlstCategories === null) {
-    let reponse = await fetch("http://localhost:5678/api/categories")
-          .then(categories => categories.json());
-    
-    // Transformation des categories en JSON (sérialiser)
-    wlstCategories = JSON.stringify(reponse);
-    // Stockage des informations dans le localStorage (sorte de sauvegarde light)
-    window.localStorage.setItem("categories", wlstCategories);
-} 
- 
-const categories = JSON.parse(wlstCategories);
 
-afficherTravaux();
+chargerCategories();
 
-function arretTraitement() {
-    console.log("Visuel works : est null, arrêt traitement");
-    return;
-} 
+let categories =  JSON.parse(window.localStorage.getItem('categories'));
 
+//afficherGalery();
+
+//-------------------------------------- Functions -------------------------------//
 
 //Affichage dynamique de la liste des Travaux de Architecte
-function afficherTravaux() {
+function afficherGalery() {
     
     maxGalery.innerHTML = ``;
       
@@ -81,78 +80,45 @@ function afficherTravaux() {
     }
 }
 
-    /* *********************************************************** --- */
-    /* ************************* Modal *************************** --- */
-    /* *********************************************************** --- */
+     
     /* ----------------------------------------------------------------*/
     /* ----------------------  MEF UPload Photo    --------------------*/ 
     /* ----------------------------------------------------------------*/  
 
 function initloadImg() {  //Init du bloc pour load img + Titre + catégorie
 
-    console.log("Initialisation du cadre de loading photo !!!");
-
-    uploadSection.innerHTML = "";
-        
-    const iconContainer = document.createElement('div');
-    iconContainer.className = 'icon-container';
-    iconContainer.innerHTML = '<i class="fa-solid fa-photo-film"></i>';
-
-    const btnPhoto = document.createElement('div');
-    btnPhoto.className = 'btn-photo';
-    btnPhoto.innerHTML = `<input type="file" id="fileImg" accept="image/jpeg, image/png" hidden>
-                          <label for="fileImg">+ Ajouter Photo</label>`;
-
-    const uploadInfo = document.createElement('div');
-    uploadInfo.className = 'upload-info';
-    uploadInfo.textContent = 'jpg, png : 4Mo max';
-
-    uploadSection.appendChild(iconContainer);
-    uploadSection.appendChild(btnPhoto);
-    uploadSection.appendChild(uploadInfo);
-
-    let optSelect = document.querySelector(".optSelect"); // 07-03-26
-    optSelect.setAttribute("id","");    // 07-03-26
-    optSelect.setAttribute("name","");  // 07-03-26
+    //console.log("Initialisation du cadre de loading photo !!!");
     
     document.querySelector(".popup-content2 #title").value = "";
-    document.querySelector(".popup-content2 #statous").value = "";
+    document.querySelector(".popup-content2 #statous").textContent  = "";
             //document.querySelector(".popup-content2 #fileImg").value = "";
     document.querySelector(".popup-content2 #lstcateg").value = "";
-    document.querySelector(".popup-content2 #errorMessage").value = "";
+    document.querySelector(".popup-content2 #errorMessage").textContent  = "";
 
     document.querySelector("#submitBtn").classList.remove("enabled");
     document.querySelector("#submitBtn").classList.add("remplir");
 
-    fileInput = document.getElementById("fileImg");
-
+    fileInput.value = ""; 
     fileInput.addEventListener("change", handleFileChange); 
 
 }
 
 function chargtCategories() {                 // 19/03/26  
 
-    console.log("Prechargement categories"); 
-        
-    //const chargList = document.querySelector("#lstcateg");
-    //chargList.innerHTML = "";  // 19-03-26
+    //Basile Select : chargList - à charger par <option> % base "categories"
      
-    
     for (let i=0; i < categories.length; i++) {
-        let optionCat = document.createElement("option");
-        //optionCat.value = categories[i].name;
-        optionCat.innerText = categories[i].name;
-        chargList.appendChild(optionCat);
-        console.log("execution de la fonction modale:2 /" +i); 
+        let option = document.createElement("option");
+        option.innerText = categories[i].name;
+        chargList.appendChild(option);
     } 
  }
 
 function chargtPopupGrid1() {
 
     galery.innerHTML = "";  // 05-03-26
-    
  
-    console.log("chargement des images stockées dans table interne"); 
+    //console.log("chargement des images miniatures stockées dans table interne"); 
   
     for (let i=0; i < works.length; i++) {
         const projet = works[i];
@@ -172,7 +138,7 @@ function chargtPopupGrid1() {
         figure.appendChild(image);
         figure.appendChild(icodiv);
         galery.appendChild(figure);
-        console.log("rang de image chargée :" + i + " et " + projet.id);
+        //console.log("rang de image chargée :" + i + " et " + projet.id);
             
         icone.addEventListener("mouseover", (event) => {
             // highlight the mouseenter target
@@ -188,7 +154,8 @@ function chargtPopupGrid1() {
             figure.remove(); // Suppression du conteneur
             
             const userData = window.localStorage.getItem('user')
-            const token = JSON.parse(userData).token;
+            //const token = JSON.parse(userData).token;
+            let token = sessionStorage.getItem("logging");
             console.log("token du delete : " + token);
             
             try {
@@ -212,7 +179,7 @@ function chargtPopupGrid1() {
                     console.log("Reponse du delete-KO : " + response.status);
                 }
             }   catch (error) {
-                statous.textContent = "Erreur : " + error.message;
+                statous.textContent = "Erreur : " + errorMessage;
                 statous.style.color = "red";
                 console.log("Reponse du delete-Other");
             }
@@ -223,15 +190,14 @@ function chargtPopupGrid1() {
 
             console.log("Après slice longueur works : " + workTab.length);
             works = workTab;
-            afficherTravaux(); 
+            afficherGalery(); 
         }); //fin de icone "click" 
             
-        modale.style.visibility = "visible";   
-        modale.scrollTop = modale.scrollHeight;  // 21-03-26
-        modale.focus();  // 21-03-26
-        //let ajoutjPhoto = document.getElementsByClassName("ajoutPhoto");    // 21-03-26
-        //ajoutjPhoto.scrollIntoView({ behavior: 'smooth', block: 'end' }); // 21-03-26 
-        //ajoutjPhoto.focus();  // 21-03-26              
+        const body = document.querySelector("body");
+        boiteModal.style.visibility = "visible";  
+        boiteModal.scrollTop = boiteModal.scrollHeight;  
+        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";  
+        boiteModal.focus();         
     } 
     
 } 
@@ -239,15 +205,17 @@ function chargtPopupGrid1() {
 
 // Définition de la fonction controleData ------------------*
 function controleData() {
-    const categorie = [];
-    const file  = fileInput.files[0] ;
+    let categorie = [];
+    let file  = fileInput.files[0] ;
     
-    const title = titleInput.value.trim();
-    const optSelect  = document.querySelector(".optSelect");
+    let title = titleInput.value.trim();
+    
+    //const erroreMessage  = document.querySelector("#uploadForm p");
     // Vérification du fichier
     
     let isValid = true;
     let messErreur = [];
+    let option = document.querySelector("#lstcateg"); // value categ cliquée
     statous.textContent = '';
     errorMessage.textContent = '';
 
@@ -255,35 +223,31 @@ function controleData() {
     if (!file) {
         isValid = false;
         messErreur.push('Veuillez sélectionner une image');
-    }
-    else {
-        console.log("file-de-controleData : " 
-         + file.name + " - " + file.type + " - " + file.size);
-        console.log("optSelect--getAttribute: "  + optSelect.getAttribute("id")); 
-    }
+    } 
 
     // Vérification du titre
     if (isValid && !title) {
         isValid = false;
         messErreur.push('Le titre ne peut pas être vide.');
     }
-
-   // Vérification de categorie 
-   if (isValid && !optSelect.getAttribute("name"))  {
+   
+   // Vérification de categorie
+    if (isValid && ! option.value)  { 
         isValid = false;
         messErreur.push("La categorie ne peut pas être vide.");
     }   else {
-        categorie.name = optSelect.getAttribute("name");
+        categorie.name = option.value;
     } 
 
     
     // Mise à jour du message d'erreur
-    if (!isValid) {
+    if (! isValid) {
         errorMessage.classList.add("rouge");
         errorMessage.classList.remove("vert");
         errorMessage.textContent = messErreur.join(); 
         submitBtn.classList.remove("enabled");
         submitBtn.classList.add("remplir");
+        console.log("submitBtn au rouge !!!");
     } else {
         console.log("submitBtn au green !!!");
         submitBtn.classList.remove("remplir");
@@ -291,10 +255,12 @@ function controleData() {
         statous.textContent = "Appuyez sur Valider pour insérer";
         errorMessage.classList.add("vert");
         errorMessage.classList.remove("rouge");
+       
     }   
 };
  
 // Remplissage champs du formulaire : Détection de la saisie sur Titre
+const titreInput = document.getElementById("title");
 titleInput.addEventListener("input", () => {    // 09-02-26
     controleData();
 });  
@@ -304,8 +270,8 @@ titleInput.addEventListener("input", () => {    // 09-02-26
 function handleFileChange(event) {  
       
     const file = event.target.files[0]; 
-    console.log("fichier - file = " + file.name + ' ' + file.type); 
-    if (file && (file.size < 4 * 1024 * 1024) &&
+    //console.log("fichier - file = " + file.name + ' ' + file.type); 
+    if (file && (file.size <= 4 * 1024 * 1024) &&  // taille limite 4
        (file.type === "image/jpeg" || file.type === "image/png") ) {
         const reader = new FileReader();
 
@@ -319,9 +285,7 @@ function handleFileChange(event) {
          
         }
         reader.readAsDataURL(file); 
-
-        console.log("Image - Toto") ;     
-
+   
         controleData();  
             
     }   else {     
@@ -345,29 +309,31 @@ function handleFileChange(event) {
 function erreur(message) {
     document.getElementById("errorMessage").textContent = message; 
 }
+const closeModal = function (e) {
+    if (boiteModal === null) return ;
+    e.preventDefault();
+    console.log("Tentative de fermeture de la boite modale");
+    console.log("Tentative de fermeture de la boite modale");
+    console.log("Tentative de fermeture de la boite modale");
+    window.localStorage.removeItem('works');                                 // 20/01/25 Delete
+    window.location.reload(); 
+}
+       
+/* ---------------------------------------------------------------------------------------------*/
+/* --------------------------------------- Procécures Evenementielles --------------------------*/
+/* ---------------------------------------------------------------------------------------------*/
+// ------------------------------------------ Gestion des Ecouteurs ----------------------------//
 
 
-
-    /* ------------------------------------------------------*/
-    /* ----------------Fin MEF UPload Photo -----------------*/ 
-    /* ------------------------------------------------------*/     
-
-afficherTravaux();
-
-//initloadImg();              !!!!! Mise en stand by 08-03-26 ??????   
-    
-/* ------------------------------------------ --------------------------------------*/
-/* ------------------------------- Procécures Evenementielles ----------------------*/
-/* ------------------------------------------ --------------------------------------*/
-
-//////////// Execution de la 1ere modale : Mini Grille des Photos ///////////
+//--------- Click sur icone "edition" et Affichage 1ere modale: Mini Grille des Photos --------//
 let edition = document.getElementById("fenetre");  
-edition.addEventListener("click", (event) => { //Fenetre Affiche Modale
-        console.log("execution de la fonction modale:1"); 
-        document.querySelector(".popup-content1").classList.add("active");
-        document.querySelector("#boiteModal").classList.remove("hidden");
-        // Changement 07-05-26                                    
-        //document.body.style.backgroundColor = "rgba(178, 189, 189, 0.8)";
+edition.addEventListener("click", (event) => { 
+        //console.log("execution de la fonction modale:1"); 
+        //document.querySelector(".popup-content1").classList.add("active");  10-05
+        boiteModal.classList.remove("hidden");
+        boiteModal.addEventListener("click", closeModal);   
+        let stopModal = document.querySelector(".popup-modal-stop");
+        stopModal.addEventListener("click", stopPropagation);
         //let main = document.querySelector("main");
         let body = document.querySelector("body");
         let inputa = document.querySelector("#contact textarea");
@@ -376,34 +342,34 @@ edition.addEventListener("click", (event) => { //Fenetre Affiche Modale
         
         //main.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
         body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-        inputa.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
-        inputm.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
-        inputt.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+        //inputa.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+        //inputm.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+        //inputt.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
                 
         document.querySelector(".popup-content2").classList.add("hidden");
-        document.querySelector(".popup-content1").classList.remove("hidden");
+        document.querySelector(".popup-content1").classList.remove("hidden"); // Modale devient actif
 
         galery.setAttribute("display","flex");
-    
-        //document.querySelector(".optSelect").setAttribute("id",""); //20-01-25
-        document.querySelector(".optSelect").setAttribute("id",""); // 20-01-25
-        document.querySelector(".optSelect").setAttribute("name",""); // 20-01-25
+     
 
-        chargtCategories();                                // 19/03/26
+        chargtCategories();                                 
          
-        chargtPopupGrid1();                                // 23-02-26 
+        chargtPopupGrid1();                                 
           
     
 });  // Fin d'exécution de la 1er modale
 
-// <----     Passage de la 1er Modale au 2eme Modale par appui sur la touche : Ajout Photo  -> //
-// ---------------------------------------------------------------------------------------------- 
+const stopPropagation = function (e) { //Empeche la propagation de l'evt (vers le parent !!!)
+    e.stopPropagation()
+}
+
+// <---- Passage 1er Modale a 2eme Modale par appui sur : Ajout Photo  -> //
 document.querySelector(".popup-content1 .ajoutPhoto").addEventListener("click", (event) => {
-    console.log("/Split Modale Grille-1 à Ajout Photo " );
+    //console.log("/Split Modale Grille-1 à Ajout Photo " );
     document.querySelector(".popup-content1").classList.add("hidden");
     document.querySelector(".popup-content2").classList.remove("hidden");
 
-    console.log("Abordage de l'étape de chargement de(s) photo(s)");
+    //console.log("Abordage de l'étape de chargement de(s) photo(s)");
     initloadImg();
     statous.textContent = '';
     errorMessage.textContent = '';
@@ -413,25 +379,22 @@ document.querySelector(".popup-content1 .ajoutPhoto").addEventListener("click", 
     document.querySelector(".popup-content2 #lstcateg").value = "";
     document.querySelector(".popup-content2 #errorMessage").value = ""; // 12-02-26 
     
-    document.querySelector("#submitBtn").classList.remove("enabled");
+    document.querySelector("#submitBtn").classList.remove("enabled"); // bouton submit inactif
     document.querySelector("#submitBtn").classList.add("remplir");
   
 });
 
- 
-// Remplissage champs du formulaire : Détection de la selection sur Catégorie
-chargList.addEventListener("click", (e) => {
-    console.log("Event-categorie : " + e.target.value );
-    const categorie = [];
-    const chargCat = document.querySelector("#lstcateg");
-    const optSelect = document.querySelector(".optSelect");
-    
+chargList.addEventListener("click", () => {
+   
+    let option = document.querySelector("#lstcateg"); // Champ de lstcateg cliqué
+
+     console.log("Catégorie cliquéé : " + option.value);
+
     for (let i=0; i < categories.length; i++) {
-        if (chargCat.value === categories[i].name) {
-            categorie.id   = categories[i].id;
-            categorie.name = categories[i].name;
-            optSelect.setAttribute("id", `${categories[i].id}`)
-            optSelect.setAttribute("name", `${categories[i].name}`)
+        if (option.value === categories[i].name) {
+            isrtCateg.id   = categories[i].id;
+            isrtCateg.name = categories[i].name;
+            break;
         }
     } 
     controleData();
@@ -439,10 +402,10 @@ chargList.addEventListener("click", (e) => {
   
 // Soumission des champs du formulaire et Record nouveau "work" 
 let formulaire = document.getElementById("uploadForm");
-formulaire.addEventListener("submit", async function (event) {
+formulaire.addEventListener("submit", async (event) => {
 
     event.preventDefault();
-    console.log("Nettoyer la zone status par textContent !!!");
+    //console.log("Nettoyer la zone status par textContent !!!");
     statous.textContent = ""
 
     if  (!submitBtn.classList.contains("enabled")) {
@@ -460,11 +423,13 @@ formulaire.addEventListener("submit", async function (event) {
     let userEnr = window.localStorage.getItem('user');
     let userParse = JSON.parse(userEnr);
     let useridIsrt = userParse.userId;
-    let tokenIsrt  = userParse.token;
+    //let tokenIsrt  = userParse.token;  
+    let tokenIsrt  = sessionStorage.getItem("logging");
+    let optCateg = document.querySelector("#lstcateg");
     let imageUrlIsrt =   fileInput.files[0].name;
-    let categoryIdIsrt = optSelect.getAttribute("id");
-    let categoryNameIsrt = optSelect.getAttribute("name");
-    /*
+    let categoryIdIsrt = isrtCateg.id
+    let categoryNameIsrt = isrtCateg.name;
+    
     console.log("user parse : "  + userParse);
     console.log("token Isrt : "  + tokenIsrt);
     console.log("userid Isrt : " + useridIsrt);
@@ -472,110 +437,86 @@ formulaire.addEventListener("submit", async function (event) {
     console.log("imageUrl Isrt : " + imageUrlIsrt);       
     console.log("categoryId Isrt : " + categoryIdIsrt);
     console.log("categoryName Isrt : " + categoryNameIsrt);
-    let objCategory = {"id":categoryIdIsrt, "name": categoryNameIsrt};
+    /*t objCategory = {"id":categoryIdIsrt, "name": categoryNameIsrt};
     */                                // Retabli au 21-01-26
-    const fdWork = new FormData();
+    let fdWork = new FormData();
     //fdWork.append("id", 0);
     fdWork.append("title", titleInput.value.trim());
     //Work.append("imageUrl", fileInput.files[0].name); // 21-01-26
     fdWork.append("image", fileInput.files[0]);
     fdWork.append("category", categoryIdIsrt);
-    //fdWork.append("userId", useridIsrt);   // 21-01-26
-    //fdWork.append("category", objCategory); // 21-01-26
-    
+     
     console.log("Insertion work avec Post");
    
     try {
       const response = await fetch("http://localhost:5678/api/works/", {
         method: "POST",
         headers: { "Authorization": `Bearer ${tokenIsrt}` },
-        body: fdWork
-         
+        body: fdWork      
       });
-
       
       if (response.ok) {
         statous.textContent = "Fichier enregistré avec succès !";
         statous.style.color = "green";
         initloadImg();
-        fileInput.value = "";                     // 1-02-026
+        fileInput.value = ""; 
+        console.log("user parse : "  + "passe 1");
       } else {
         statous.textContent = "Erreur lors de l'enregistrement.";
         statous.style.color = "red";
-        console.log("Erreur d'insertion :" +response.status);
+        console.log("user parse : "  + "passe 2");
+        //console.log("Erreur d'insertion :" +response.status);
       }
     } catch (error) {
-      statous.textContent = "Erreur : " + error.message;
+      statous.textContent = "Erreur : " + errorMessage.textContent ;
       statous.style.color = "red";
+      console.log("Erreur détectée :", error);
+      console.log("Message erreur :", errorMessage.textContent);
     }
-    
 });
  
- 
+console.log("user parse : "  + "piste 1");
+// Click:logout ---> Retour nouvelle session de travail
+document.getElementById("menuIndex").addEventListener("click", (event) => {
+
+    event.preventDefault(); //car herf="#" au depart (20-05-26 supprimer !!!)
+
+    window.localStorage.removeItem('works'); //Obliger à rechargement de la Database
+
+    sessionStorage.removeItem("logging"); // Retour à Accueil
+
+    window.location.href = "index.html";
+});
+console.log("user parse : "  + "piste 2");
 // Retour Grille images Mini et Maxi : fa-arrow-left
 document.querySelector(".popup-content2 .fa-arrow-left")
 .addEventListener("click", async (event) => {
      
-    document.querySelector(".popup-content2").classList.add("hidden");      // 23-02-26
-    document.querySelector(".popup-content1").classList.remove("hidden");   // 23-02-26
+    document.querySelector(".popup-content2").classList.add("hidden");      
+    document.querySelector(".popup-content1").classList.remove("hidden");  
 
-    // Rechargement des nouveaux works et Rafraichissements de Window-Local-Storage       
-    works = await fetch("http://localhost:5678/api/works")   // 06-03-26
-                 .then(works => works.json());
-    console.log("longueur works apres : " + works.length);        
-    
-    // Transformation des works de JSON en String(sérialiser)
-    wlstWorks = JSON.stringify(works);
-
-    // Stockage des informations dans le localStorage (sorte de sauvegarde light)
-    window.localStorage.removeItem('works');                 // 27-02-26
-    window.localStorage.setItem("works", wlstWorks);   
-
-    afficherTravaux();        // Rechargement maxi Grille
-
-      
-    chargtPopupGrid1();       // Rechargement mini Grille                        
-     
 });
- 
+console.log("user parse : "  + "piste 3"); 
 // Fermeture de la Modale : popup-content1
 let closePopup1 = document.querySelector(".popup-content1 .close-popup"); 
-closePopup1.addEventListener("click", (event) => {    
-    // redirige vers la page indexModal.html
-    window.localStorage.removeItem('works');                                 // 20/01/25 Delete
-    window.location.reload();
+closePopup1.addEventListener("click", () => {    
+    window.localStorage.removeItem('works');
+    window.location.reload(); 
 });
-/* On écoute le click sur la div "popupImg" 
-let popupImg = document.querySelector(".popup-content1"); 
-popupImg.addEventListener("click", (event) => {
-    console.log("Detection : popupImg");
+console.log("user parse : "  + "piste 4");
+boiteModal.addEventListener("click", (event) => {  // La fermeture exterieure*/
+    console.log("Detecte close : boiteModal");      // de boite modale se joue Ici !!!
     // clic à l'extérieur du popup
-    if (event.target === popupImg) {
-        console.log("succes de fermeture : popupImg");
-        popupImg.classList.remove("active");
-        window.localStorage.removeItem('works');                                 // 20/01/25 Delete
-        window.location.reload();
+    if (event.target === boiteModal) {       
+        console.log("Fermeture : boiteModal");
+        //boiteModal.classList.add("hidden");
     }
-});  */
-
-let content = document.querySelector(".popup-content-modal");
-// Fermer si clic en dehors du contenu
-content.addEventListener("click", function (event) {
-    console.log("Detection : popupImg");
-    if (event.target === content) {
-      console.log("succes de fermeture : popupImg");  
-      modale.style.visibility = "hidden";
-      modale.setAttribute("aria-hidden", "true");
-    }
-});
-
-
+}); 
+console.log("user parse : "  + "piste 5");
 // Fermeture de la Modale : popup-content2
-
 let closePopup2 = document.querySelector(".popup-content2 .close-popup"); 
 closePopup2.addEventListener("click", (event) => {
-    console.log("execution de la fonction modale: 6 ?");
-    // redirige vers la page indexModal.html
+    //console.log("execution de la fonction modale: 6 ?");
     window.localStorage.removeItem('works');                                 // 20/01/25 Delete
-    window.location.reload();
+    window.location.reload(); 
 });

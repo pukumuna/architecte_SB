@@ -1,72 +1,33 @@
+import { chargerWorks, chargerCategories } from "./acces.js";
+///
+let menuLog = document.getElementById("menuIndex");
+menuLog.innerHTML = `
+        <a class="nave" href="login.html">login</a>
+    `;
+
+let filtre_edit = document.getElementById("filtre_edit");
+filtre_edit.innerHTML = `
+        <div id="categProjet">
+			<h2 id="Projets">Mes Projets</h2>
+			<div class="categFiltre "></div>
+		</div>
+    `; 
+ 
 //constante Grille Gallerie
-const galery = document.querySelector(".maxGallery");    // 27-02-26
+let galery = document.querySelector(".maxGallery"); 
 
-window.localStorage.removeItem('works');  // 20/01/25 à supprimer
-//Récupération des works eventuellement stockées dans le localStorage
-let wlstWorks = window.localStorage.getItem('works'); //works = "";
+let works = "";
 
-if (wlstWorks === null) {
-    // Récupération des works depuis l'API
-    //nst reponse = await fetch("http://localhost:5678/api/works").then(works => works.json()); // Fusionner
-    //const reponse = await fetch('works-data.json');
-    const reponse = await fetch("http://localhost:5678/api/works");
-    let jsWorks   = await reponse.json(); //works au format JS
-    console.log("works oyé oyé : " + jsWorks[0].title);
-    // Transformation des works en JSON (sérialiser)
-    const wlstWorks = JSON.stringify(jsWorks);
-    // Stockage des informations dans le localStorage (sorte de sauvegarde light)
-    window.localStorage.setItem("works", wlstWorks);
-}    
+async function misefTravaux() {
 
-const works = JSON.parse(window.localStorage.getItem('works'));
-console.log("Test works local store : " + works[0].title);
-
-
-afficherTravaux(works);
-
-//Affichage dynamique de la liste de catégorie
-//Pour permettre le Filtrage par type(catégotie) de travaux
-let categories = window.localStorage.getItem('categories');
-if (categories === null) {
-    const categories = await fetch("http://localhost:5678/api/categories").then(categories => categories.json());
+   await chargerWorks();
     
-    // Transformation des categories en JSON (sérialiser)
-    const valeurCategories = JSON.stringify(categories);
-    // Stockage des informations dans le localStorage (sorte de sauvegarde light)
-    window.localStorage.setItem("categories", valeurCategories);
-} else {
-    categories = JSON.parse(categories);
+   works = JSON.parse(localStorage.getItem("works"));
+   console.log("Test works local store : " + works[0].title);
+   afficherTravaux(works); 
 }
-const categFiltre = document.querySelector(".categFiltre");
-//D'abord Catégories "Tous"
-const categDiv  = document.createElement("div");
-const categLien = document.createElement("a");
-categLien.href="#"; //Ces 5 lignes attributs du lien <a...>
-//categLien.id = 0;  //Modifier à cause du focus
-//categLien.dataset.id =  0; //Modifier à cause du focus
-categLien.id = "tous";
-categLien.dataset.name = "Tous"; 
-categLien.innerText = "Tous";
-categLien.classList.add("categActive");
-categLien.classList.add("categNormal");
-categDiv.appendChild(categLien);
-categFiltre.appendChild(categDiv);
-//Ensuite autres Catégories "Objets", ...
-for (let i=0; i < categories.length; i++) {
-    const categorie = categories[i];
-    const categDiv  = document.createElement("div");
-    const categLien = document.createElement("a");
 
-    //categLien.id = i+1;  //Modifier à cause du focus
-    //categLien.dataset.id =  categorie.id; //Modifier à cause du focus
-    categLien.href="#";
-    categLien.id= categorie.name;
-    categLien.innerText = categorie.name;
-    categLien.dataset.name = categorie.name;   
-    categLien.classList.add("categNormal");
-    categDiv.appendChild(categLien);
-    categFiltre.appendChild(categDiv);
-}
+misefTravaux();
 
 //Affichage dynamique de la liste des Travaux de Architecte
 function afficherTravaux(projets) {
@@ -81,7 +42,7 @@ function afficherTravaux(projets) {
         caption.classList.add("titrImage");
         image.src=projet.imageUrl;
         image.alt=projet.title; 
-        caption.innerText=projet.title;
+        caption.innerText=projet.title; 
         
         figure.appendChild(image);
         
@@ -91,30 +52,67 @@ function afficherTravaux(projets) {
 
     }
 }
+
+//-------------------------------------------------------------------------------------------------//
+//----- Affichage dynamique catégorie Pour permettre Filtrage par (catégotie) de travaux  ---------//
+//------------------------- si utilisateur non connecté comme Admmistrateur   ---------------------//
+//-------------------------------------------------------------------------------------------------//
+
+//nsole.log("appelle chargerCategories de la BD");
+chargerCategories();
+
+let categories = JSON.parse(localStorage.getItem('categories'));
+//console.log("Test categories name : " +categories[0].name);
+
+let categFiltre = document.querySelector(".categFiltre"); /* Stockage de toutes les categories à afficher ss forme de "div" */ 
+//D'abord Catégories "Tous"                                  /* Sous forme des liens "a" chacun dans une "div" */ 
+let categDiv  = document.createElement("div");
+let categLien = document.createElement("a");
+categLien.href="#"; //Ces 5 lignes attributs du lien <a...>
+categLien.id = "tous";
+categLien.dataset.name = "Tous"; 
+categLien.innerText = "Tous";
+categLien.classList.add("categActive");
+categLien.classList.add("categNormal");
+categDiv.appendChild(categLien);
+categFiltre.appendChild(categDiv);
+//Ensuite autres Catégories "Objets", ...
+for (let i=0; i < categories.length; i++) {
+    let categorie = categories[i];
+    let categDiv  = document.createElement("div");
+    let categLien = document.createElement("a");
+    categLien.href = "#";
+    categLien.id = categorie.name;
+    categLien.innerText = categorie.name;
+    categLien.dataset.name = categorie.name;   
+    categLien.classList.add("categNormal");
+    categDiv.appendChild(categLien);
+    categFiltre.appendChild(categDiv);
+}
+
 // Event listener sur categorie clicquée | Ctrl en cas de Click / Catégorie
 // Ctrl que l'id du lien correpond à la catégorie de l'élément
  
-const liensCateg = document.querySelectorAll(".categFiltre a");
-//Scan de tous les liens "liensCateg" pour savoir lequel a été cliqué
+const liensCateg = document.querySelectorAll(".categFiltre a"); // Selection des liens de la section
+//Scan de tous les liens "liensCateg" pour les mettre à l'écoute et savoir lequel a été cliqué
 for (let i=0; i < liensCateg.length; i++) {
     let categLien = liensCateg[i];
     categLien.addEventListener ("click", (event) => {
-        categLien.classList.add("categActive");
-        // dataset.name = name de la catégorie    
+        categLien.classList.add("categActive"); // lien cliqué a la "categActive"
+        // Appel fonction "filtreObjects" avec [dataset.name = name de la catégorie]    
         filtreObjects(event.target.dataset.name);
         let categorieName = event.target.dataset.name;
-        for (let j=0; j < liensCateg.length; j++) {
-            let categLien = liensCateg[j]; 
-            categLien.classList.add("categNormal");            
-            if (!(categLien.dataset.name === categorieName)) {
-                categLien.classList.remove("categActive");        
+        for (let j=0; j < liensCateg.length; j++) { // remove "categActive" aux autres liens
+            let lienCateg = liensCateg[j];            
+            if (!(lienCateg.dataset.name === categorieName)) {
+                lienCateg.classList.remove("categActive");        
             }
         };
         categLien.href = "#`${event.target.dataset.name}`";
     })
 } 
 
-// Filtre objets sur la categorie selectionnee
+// Filtre objets - works - sur la categorie selectionnee
 function filtreObjects(name) { // "name" = event.target.dataset.name
     if (name === "Tous") {
         afficherTravaux(works);
@@ -122,21 +120,21 @@ function filtreObjects(name) { // "name" = event.target.dataset.name
       const worksFiltres =  
       works.filter(obj => obj.category.name === name);
       afficherTravaux(worksFiltres);
+      for (let k=0; k < worksFiltres.length; k++) {
+        console.log(name + ":" + worksFiltres[k].title );
+      }
     }
   }
+ 
 
-  // Initialisation à "tous" en cas de click sur nav Projets
+  // Initialisation du lien de categorie'Tous' comme "lien actif"
+  // en cas de click sur nav Projets
   const aHeader = document.querySelector("header a[href='#Projets']");
   aHeader.addEventListener("click", (event) => {
     const initFiltre = document.querySelectorAll(".categFiltre a");
-    initFiltre[0].classList.add("categNormal");
     initFiltre[0].classList.add("categActive");
     for (let i=1; i < initFiltre.length; i++) {
-        initFiltre[i].classList.add("categNormal");
         initFiltre[i].classList.remove("categActive");
     }
   }) 
-
   
-  
-

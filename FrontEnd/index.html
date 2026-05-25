@@ -6,19 +6,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	
+	<!--script src="traiter.js" defer></script-->
+	<!--script src="acces.js" defer></script-->
+	<!--script src="modal.js" defer></script-->
+	<!--script src="works.js" defer></script-->
 </head>
 <body>
+<div class="modEntete"></div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li><a class="nave" href="#Projets">projets</a></li>
 			<li><a class="nave" href="#name">contact</a></li>
-			<li><a class="nave" href="./login.html">login</a></li>
+			<li><a class="nave" href="login.html" id="menuIndex">logout</a></li> 
 			<li><img src="./assets/icons/instagram.png" 
 				alt="Instagram" class="instagr">
 			</li>
@@ -39,12 +44,89 @@
 		</article>
 	</section>
 
-	<section id="portfolio"> 
-		<div id="catgProjet">
+	<section id="filtre_edit"> <!--section utile pour filtrage/misaj travaux"-->
+		<!--div id="catgProjet">!--Partie filtrage projets--
 			<h2 id="Projets">Mes Projets</h2>
 			<div class="categFiltre "></div>
+		</div-->
+
+		<div id="EditProjets"> <!--Partie edition projets-->
+			<h2 id="Projets">Mes Projets</h2>
+			
+			<div class="editer"> <!-- lien "fenetre" : edition projets-->
+				<a id="fenetre" href="#" > 
+				   <i class="editColor fas fa-edit"></i>
+				</a>
+				<span>modifier</span>
+			</div>
 		</div>
+	</section>
+
+	<section id="galerie_modal"> 
 		<div class="maxGallery"></div>
+
+		<aside id="boiteModal" aria-hidden="true" role="dialog" style="visibility:hidden;">
+			 	
+			<div class="popup-content-modal popup-modal-stop">
+				<div class="popup-content1" >
+					<div class="popup-header">
+						<button class="close-popup">&times;</button>
+					</div>
+
+					<h2>Galerie Photo</h2>
+					
+					<div class="popup-grid1"> <!-- Affichage des Images miniatures -->
+						<!--overflow-y: auto; pour scrolling -->
+					</div>
+
+					<hr>
+					<div class="splitPhoto">
+						<button class="ajoutPhoto">Ajouter une photo</button>
+					</div>
+				</div>
+
+				<div class="popup-content2" >
+					<div class="popup-header">
+						<button class="close-popup">&times;</button>
+					</div>
+					<div class="retour-grille">
+						<button>
+							<i class="fa fa-arrow-left" aria-hidden="true"></i>
+						</button>
+					</div>
+
+					<h2>Ajout Photo</h2>
+					<form id="uploadForm"> 
+						<div class="upload-section" > <!-- Upload images de Asset  -->
+							<div class="icon-container">
+								<i class="fa-solid fa-photo-film"></i>
+							</div>
+							<div class="btn-photo">
+								<input type="file" id="fileImg" accept="image/jpeg, image/png" hidden>
+								<label for="fileImg">+ Ajouter Photo</label>
+							</div>
+							<div class="upload-info">jpg, png : 4m0 max</div>
+						</div>  
+						<div class="form-section"> <!-- Donner Titre et Choix categorie -->
+							<label for="title">Titre</label>
+							<input type="text" id="title" >
+							<label for="category">Catégorie</label>
+							
+							<select id="lstcateg">
+								<!--option class="optSelect"></option-->   
+							</select>
+						
+							<hr>
+							<div class="btn-submit">
+								<input type="submit" id="submitBtn" value="Valider" class="enabled remplir">
+							</div>
+							<p id="errorMessage" class="" ></p>
+							<p id="statous"></p>
+						</div>
+					</form>
+				</div>	 <!--Fin Div 2-->
+				</div>   <!--Fin Div popup-content-modal-->
+         </aside>
 	</section>
 
 	<section id="contact">
@@ -56,12 +138,11 @@
 			<label for="email">Email</label>
 			<input type="email" name="email" id="email"  required>
 			<label for="message">Message</label>
-			<textarea name="message" id="message" cols="30" rows="10 required"></textarea>
+			<textarea name="message" id="message" cols="30" rows="10 required"></textarea> 
 			<input type="submit" value="Envoyer">
 		</form>
 	</section>
 </main>
-
 <footer>
 	<nav>
 		<ul>
@@ -70,7 +151,7 @@
 	</nav>
 </footer>
 </body>
-<script type="module" src="works.js"></script>
+<script type="module" src="traiter.js"></script>
 </html>
 
  
