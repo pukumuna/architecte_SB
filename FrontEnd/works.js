@@ -7,6 +7,7 @@ menuLog.innerHTML = `
 let modEntete = document.querySelector(".modEntete");
 modEntete.innerHTML = ``; 
 modEntete.style.backgroundColor = "#FFFEF8";
+modEntete.style.borderColor = "#FFFEF8";
 
 let filtre_edit = document.getElementById("filtre_edit");
 filtre_edit.innerHTML = `
