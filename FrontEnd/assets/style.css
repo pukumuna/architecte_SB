@@ -38,11 +38,12 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
 
 body {
 	/*overflow-x: hidden; *//* Empêche le débordement horizontal */
-	max-width: 100vw;
+	max-width: 1440px;
 	margin:auto;
 	font-family: 'Syne', sans-serif;
 	font-size: 14px;

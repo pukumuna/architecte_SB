@@ -10,6 +10,8 @@ modEntete.innerHTML = `
 		    <span id="spanEdit">Mode édition</span>
 	    </div>
     `;
+let body = document.querySelector("body"); 
+body.style.backgroundColor = "#FFFEF8";
 
 let maxGalery = document.querySelector(".maxGallery");    
     
@@ -43,12 +45,12 @@ async function misefTravaux() {
    await chargerWorks();
     
    works = JSON.parse(localStorage.getItem("works"));
-   console.log("Test works local store : " + works[0].title);
+   //console.log("Test works local store : " + works[0].title);
    afficherGalery(works); 
+
 }
 
 misefTravaux();
-
 
 chargerCategories();
 
@@ -80,6 +82,15 @@ function afficherGalery() {
     }
 }
 
+//ReChargement de Grilles "mini" et "maxi" après insert de "work"
+async function loadGrilles() {
+
+    await misefTravaux();
+
+    chargtPopupGrid1();
+
+    //console.log("Nombre de travaux denombré : " + works.length);
+}
      
     /* ----------------------------------------------------------------*/
     /* ----------------------  MEF UPload Photo    --------------------*/ 
@@ -90,7 +101,7 @@ function initloadImg() {  //Init du bloc pour load img + Titre + catégorie
     //console.log("Initialisation du cadre de loading photo !!!");
     
     document.querySelector(".popup-content2 #title").value = "";
-    document.querySelector(".popup-content2 #statous").textContent  = "";
+    //document.querySelector(".popup-content2 #statous").textContent  = "";
             //document.querySelector(".popup-content2 #fileImg").value = "";
     document.querySelector(".popup-content2 #lstcateg").value = "";
     document.querySelector(".popup-content2 #errorMessage").textContent  = "";
@@ -98,10 +109,34 @@ function initloadImg() {  //Init du bloc pour load img + Titre + catégorie
     document.querySelector("#submitBtn").classList.remove("enabled");
     document.querySelector("#submitBtn").classList.add("remplir");
 
-    fileInput.value = ""; 
-    fileInput.addEventListener("change", handleFileChange); 
-
+    //fileInput.value = ""; ; 
+    fileInput.addEventListener("change", handleFileChange);
 }
+
+function resetUpload() {
+        
+        const uploadSection = document.querySelector(".upload-section");
+
+        uploadSection.innerHTML = `
+            <div class="icon-container">
+                <i class="fa-solid fa-photo-film"></i>
+            </div>
+
+            <div class="btn-photo">
+                <input type="file"
+                    id="fileImg"
+                    accept="image/jpeg, image/png"
+                    hidden>
+
+                <label for="fileImg">+ Ajouter Photo</label>
+            </div>
+
+            <div class="upload-info">
+                jpg, png : 4Mo max
+            </div>
+        `;   
+}     
+
 
 function chargtCategories() {                 // 19/03/26  
 
@@ -149,14 +184,13 @@ function chargtPopupGrid1() {
         }); // fin de icone "mouseover"          
 
         icone.addEventListener("click", async () => {
-            alert('Image supprimée !');
+            alert('Image va être supprimée !');
             const id = icone.getAttribute("workid");
             figure.remove(); // Suppression du conteneur
             
             const userData = window.localStorage.getItem('user')
             //const token = JSON.parse(userData).token;
             let token = sessionStorage.getItem("logging");
-            console.log("token du delete : " + token);
             
             try {
                 const response = await fetch(`http://localhost:5678/api/works/${id}`, {
@@ -167,37 +201,28 @@ function chargtPopupGrid1() {
                     }
                 }); //fin du fetch
            
-                console.log("Reponse du delete : " + response);
+                //console.log("Reponse du delete : " + response);
                              
                 if (response.ok) {
                     statous.textContent = "Delete effectué avec succès !";
                     statous.style.color = "green";
-                    console.log("Reponse du delete-OK : " + response.ok);       
+                    //console.log("Reponse du delete-OK : " + response.ok);       
                  } else {
                     statous.textContent = "Erreur lors de delete work";
                     statous.style.color = "red";
-                    console.log("Reponse du delete-KO : " + response.status);
+                    //console.log("Reponse du delete-KO : " + response.status);
                 }
             }   catch (error) {
                 statous.textContent = "Erreur : " + errorMessage;
                 statous.style.color = "red";
-                console.log("Reponse du delete-Other");
+                //console.log("Reponse du delete-Other");
             }
              
             // Suppression de élément du tableau works
-            console.log("Avant slice longueur works : " + works.length);
             let workTab = works.filter(work => work.id != id);
-
-            console.log("Après slice longueur works : " + workTab.length);
             works = workTab;
             afficherGalery(); 
-        }); //fin de icone "click" 
-            
-        const body = document.querySelector("body");
-        boiteModal.style.visibility = "visible";  
-        boiteModal.scrollTop = boiteModal.scrollHeight;  
-        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";  
-        boiteModal.focus();         
+        }); //fin de icone "click"  
     } 
     
 } 
@@ -247,9 +272,9 @@ function controleData() {
         errorMessage.textContent = messErreur.join(); 
         submitBtn.classList.remove("enabled");
         submitBtn.classList.add("remplir");
-        console.log("submitBtn au rouge !!!");
+        //console.log("submitBtn au rouge !!!");
     } else {
-        console.log("submitBtn au green !!!");
+        //console.log("submitBtn au green !!!");
         submitBtn.classList.remove("remplir");
         submitBtn.classList.add("enabled"); 
         statous.textContent = "Appuyez sur Valider pour insérer";
@@ -309,15 +334,6 @@ function handleFileChange(event) {
 function erreur(message) {
     document.getElementById("errorMessage").textContent = message; 
 }
-const closeModal = function (e) {
-    if (boiteModal === null) return ;
-    e.preventDefault();
-    console.log("Tentative de fermeture de la boite modale");
-    console.log("Tentative de fermeture de la boite modale");
-    console.log("Tentative de fermeture de la boite modale");
-    window.localStorage.removeItem('works');                                 // 20/01/25 Delete
-    window.location.reload(); 
-}
        
 /* ---------------------------------------------------------------------------------------------*/
 /* --------------------------------------- Procécures Evenementielles --------------------------*/
@@ -325,43 +341,32 @@ const closeModal = function (e) {
 // ------------------------------------------ Gestion des Ecouteurs ----------------------------//
 
 
-//--------- Click sur icone "edition" et Affichage 1ere modale: Mini Grille des Photos --------//
+//--------- Click sur icone "edition" et - SUR -- (Backg sombre) --// 
+//--------- Affichage 1ere modale: Mini Grille desPhotos ----------//
 let edition = document.getElementById("fenetre");  
 edition.addEventListener("click", (event) => { 
-        //console.log("execution de la fonction modale:1"); 
-        //document.querySelector(".popup-content1").classList.add("active");  10-05
+        
         boiteModal.classList.remove("hidden");
-        boiteModal.addEventListener("click", closeModal);   
-        let stopModal = document.querySelector(".popup-modal-stop");
-        stopModal.addEventListener("click", stopPropagation);
-        //let main = document.querySelector("main");
-        let body = document.querySelector("body");
+        
         let inputa = document.querySelector("#contact textarea");
         let inputt = document.querySelector("#contact input[type='text']");
         let inputm = document.querySelector("#contact input[type='email']");
-        
-        //main.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-        //inputa.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
-        //inputm.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
-        //inputt.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
                 
         document.querySelector(".popup-content2").classList.add("hidden");
         document.querySelector(".popup-content1").classList.remove("hidden"); // Modale devient actif
 
         galery.setAttribute("display","flex");
-     
 
         chargtCategories();                                 
          
-        chargtPopupGrid1();                                 
-          
-    
+        chargtPopupGrid1();   
+            
+        boiteModal.style.visibility = "visible";  
+        boiteModal.scrollTop = boiteModal.scrollHeight;  
+        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";  
+        boiteModal.focus();        
+             
 });  // Fin d'exécution de la 1er modale
-
-const stopPropagation = function (e) { //Empeche la propagation de l'evt (vers le parent !!!)
-    e.stopPropagation()
-}
 
 // <---- Passage 1er Modale a 2eme Modale par appui sur : Ajout Photo  -> //
 document.querySelector(".popup-content1 .ajoutPhoto").addEventListener("click", (event) => {
@@ -388,7 +393,7 @@ chargList.addEventListener("click", () => {
    
     let option = document.querySelector("#lstcateg"); // Champ de lstcateg cliqué
 
-     console.log("Catégorie cliquéé : " + option.value);
+     //console.log("Catégorie cliquéé : " + option.value);
 
     for (let i=0; i < categories.length; i++) {
         if (option.value === categories[i].name) {
@@ -423,100 +428,94 @@ formulaire.addEventListener("submit", async (event) => {
     let userEnr = window.localStorage.getItem('user');
     let userParse = JSON.parse(userEnr);
     let useridIsrt = userParse.userId;
-    //let tokenIsrt  = userParse.token;  
     let tokenIsrt  = sessionStorage.getItem("logging");
     let optCateg = document.querySelector("#lstcateg");
     let imageUrlIsrt =   fileInput.files[0].name;
     let categoryIdIsrt = isrtCateg.id
     let categoryNameIsrt = isrtCateg.name;
-    
+    /*
     console.log("user parse : "  + userParse);
     console.log("token Isrt : "  + tokenIsrt);
     console.log("userid Isrt : " + useridIsrt);
     console.log("title Isrt : " + titleInput.value.trim()); 
     console.log("imageUrl Isrt : " + imageUrlIsrt);       
     console.log("categoryId Isrt : " + categoryIdIsrt);
-    console.log("categoryName Isrt : " + categoryNameIsrt);
+    console.log("categoryName Isrt : " + categoryNameIsrt); */
     /*t objCategory = {"id":categoryIdIsrt, "name": categoryNameIsrt};
     */                                // Retabli au 21-01-26
-    let fdWork = new FormData();
-    //fdWork.append("id", 0);
+    let fdWork = new FormData(); 
     fdWork.append("title", titleInput.value.trim());
-    //Work.append("imageUrl", fileInput.files[0].name); // 21-01-26
     fdWork.append("image", fileInput.files[0]);
     fdWork.append("category", categoryIdIsrt);
      
-    console.log("Insertion work avec Post");
+    //console.log("Insertion work avec Post");
    
     try {
-      const response = await fetch("http://localhost:5678/api/works/", {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${tokenIsrt}` },
-        body: fdWork      
-      });
-      
-      if (response.ok) {
-        statous.textContent = "Fichier enregistré avec succès !";
-        statous.style.color = "green";
-        initloadImg();
-        fileInput.value = ""; 
-        console.log("user parse : "  + "passe 1");
-      } else {
-        statous.textContent = "Erreur lors de l'enregistrement.";
-        statous.style.color = "red";
-        console.log("user parse : "  + "passe 2");
-        //console.log("Erreur d'insertion :" +response.status);
-      }
+        const response = await fetch("http://localhost:5678/api/works/", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${tokenIsrt}` },
+            body: fdWork      
+        });
+        
+        if (response.ok) {
+            statous.textContent = "Fichier enregistré avec succès !";
+            statous.style.color = "green";
+            window.localStorage.removeItem('works'); // Nettoyage "works" dans local Storage
+            
+            loadGrilles();     // Rechargement grilles maxi et mini
+        
+            resetUpload();
+            initloadImg();
+        
+        } else {
+            statous.textContent = "Erreur lors de l'enregistrement.";
+            statous.style.color = "red";
+        }
     } catch (error) {
-      statous.textContent = "Erreur : " + errorMessage.textContent ;
+      statous.textContent = "Erreur : non attendue" ;
       statous.style.color = "red";
-      console.log("Erreur détectée :", error);
-      console.log("Message erreur :", errorMessage.textContent);
+      //console.log("Erreur détectée :", error);
     }
 });
  
-console.log("user parse : "  + "piste 1");
+
 // Click:logout ---> Retour nouvelle session de travail
 document.getElementById("menuIndex").addEventListener("click", (event) => {
 
     event.preventDefault(); //car herf="#" au depart (20-05-26 supprimer !!!)
 
     window.localStorage.removeItem('works'); //Obliger à rechargement de la Database
-
-    sessionStorage.removeItem("logging"); // Retour à Accueil
-
+    sessionStorage.removeItem("logging"); // Retour à Accueil: nouvelle Session
     window.location.href = "index.html";
 });
-console.log("user parse : "  + "piste 2");
+
+
 // Retour Grille images Mini et Maxi : fa-arrow-left
 document.querySelector(".popup-content2 .fa-arrow-left")
 .addEventListener("click", async (event) => {
      
     document.querySelector(".popup-content2").classList.add("hidden");      
-    document.querySelector(".popup-content1").classList.remove("hidden");  
-
+    document.querySelector(".popup-content1").classList.remove("hidden");
 });
-console.log("user parse : "  + "piste 3"); 
+
 // Fermeture de la Modale : popup-content1
 let closePopup1 = document.querySelector(".popup-content1 .close-popup"); 
 closePopup1.addEventListener("click", () => {    
     window.localStorage.removeItem('works');
     window.location.reload(); 
 });
-console.log("user parse : "  + "piste 4");
+
 boiteModal.addEventListener("click", (event) => {  // La fermeture exterieure*/
-    console.log("Detecte close : boiteModal");      // de boite modale se joue Ici !!!
-    // clic à l'extérieur du popup
-    if (event.target === boiteModal) {       
-        console.log("Fermeture : boiteModal");
-        //boiteModal.classList.add("hidden");
+    //console.log("Detecte close : boiteModal");      // de boite modale se joue Ici !!!
+    if (event.target === boiteModal) {   // Detecte clic à l'extérieur du popup    
+        boiteModal.style.visibility = "hidden"; 
+        body.style.backgroundColor = "#FFFEF8";
     }
 }); 
-console.log("user parse : "  + "piste 5");
+
 // Fermeture de la Modale : popup-content2
 let closePopup2 = document.querySelector(".popup-content2 .close-popup"); 
 closePopup2.addEventListener("click", (event) => {
-    //console.log("execution de la fonction modale: 6 ?");
     window.localStorage.removeItem('works');                                 // 20/01/25 Delete
     window.location.reload(); 
 });

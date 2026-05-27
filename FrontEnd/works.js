@@ -4,6 +4,9 @@ let menuLog = document.getElementById("menuIndex");
 menuLog.innerHTML = `
         <a class="nave" href="login.html">login</a>
     `;
+let modEntete = document.querySelector(".modEntete");
+modEntete.innerHTML = ``; 
+modEntete.style.backgroundColor = "#FFFEF8";
 
 let filtre_edit = document.getElementById("filtre_edit");
 filtre_edit.innerHTML = `
@@ -23,7 +26,7 @@ async function misefTravaux() {
    await chargerWorks();
     
    works = JSON.parse(localStorage.getItem("works"));
-   console.log("Test works local store : " + works[0].title);
+   //console.log("Test works local store : " + works[0].title);
    afficherTravaux(works); 
 }
 
@@ -120,9 +123,9 @@ function filtreObjects(name) { // "name" = event.target.dataset.name
       const worksFiltres =  
       works.filter(obj => obj.category.name === name);
       afficherTravaux(worksFiltres);
-      for (let k=0; k < worksFiltres.length; k++) {
+      /*for (let k=0; k < worksFiltres.length; k++) {
         console.log(name + ":" + worksFiltres[k].title );
-      }
+      } */
     }
   }
  

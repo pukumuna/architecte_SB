@@ -12,7 +12,7 @@ export async function chargerWorks() {
                        .then(resp => resp.json());
         let wlstWorks = JSON.stringify(jsWorks);
         localStorage.setItem("works", wlstWorks);
-        console.log("Test works local store :  + chargerWorks");
+        
         return wlstWorks;
     }
 }

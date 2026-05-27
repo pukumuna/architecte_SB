@@ -1,4 +1,4 @@
-// vérifier connexion
+// Module central de Lancement "module d'accueil : works.js" ou "module misaj : modal.js"
 //let user = localStorage.getItem("user");
 //sessionStorage.removeItem("logging");
 // créer balise script
@@ -15,7 +15,6 @@ if (sessionStorage.getItem("logging")){
     script.src = "modal.js";
 }
 else {
-
     console.log("Utilisateur non connecté");
 
     // charger fichier normal
@@ -25,7 +24,7 @@ else {
 // attendre chargement du fichier
 script.onload = () => {
 
-    console.log("Le fichier JS " + script.src + " est chargé");
+    console.log("Module chargé: " + script.src);
 
     // ici vous pouvez lancer du code
 };
