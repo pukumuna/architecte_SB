@@ -18,7 +18,7 @@ let maxGalery = document.querySelector(".maxGallery");
 const boiteModal = document.getElementById("boiteModal"); 
 
 //Variable Gallerie et icone
-let works;
+//let works;
 const galery = document.querySelector(".popup-grid1");      
 const uploadSection = document.querySelector('.upload-section');
 const fileInput = document.getElementById("fileImg");
@@ -39,34 +39,30 @@ const errorMessage = document.getElementById("errorMessage");
 
 // ----------------Fin interpolation de ajout dynamique menuLOg * Aside pour popup -----------------//
 
-//Récupération des categories eventuellement stockées dans le localStorage
-async function misefTravaux() {
-
-   await chargerWorks();
-    
-   works = JSON.parse(localStorage.getItem("works"));
-   //console.log("Test works local store : " + works[0].title);
-   afficherGalery(works); 
-
-}
-
-misefTravaux();
+ let works = extraireAfficheTravaux();
 
 chargerCategories();
 
 let categories =  JSON.parse(window.localStorage.getItem('categories'));
 
-//afficherGalery();
-
 //-------------------------------------- Functions -------------------------------//
+//Récupération des categories eventuellement stockées dans le localStorage
+async function extraireAfficheTravaux() {
+
+   await chargerWorks();
+    
+   let works = JSON.parse(localStorage.getItem("works"));
+   //console.log("Test works local store : " + works[0].title);
+   afficherGalery(works); 
+   return works
+}
 
 //Affichage dynamique de la liste des Travaux de Architecte
-function afficherGalery() {
+function afficherGalery(works) {
     
     maxGalery.innerHTML = ``;
       
     for (let i=0; i < works.length; i++) {
-        //if (i === idel) { continue; }
         const projet = works[i];
         const figure = document.createElement("figure");
         const image  = document.createElement("img");
@@ -85,9 +81,9 @@ function afficherGalery() {
 //ReChargement de Grilles "mini" et "maxi" après insert de "work"
 async function loadGrilles() {
 
-    await misefTravaux();
+    let works = await extraireAfficheTravaux(); //affiche maxGallery
 
-    chargtPopupGrid1();
+    chargtPopupGrid1(works);
 
     //console.log("Nombre de travaux denombré : " + works.length);
 }
@@ -149,7 +145,7 @@ function chargtCategories() {                 // 19/03/26
     } 
  }
 
-function chargtPopupGrid1() {
+function chargtPopupGrid1(works) {
 
     galery.innerHTML = "";  // 05-03-26
  
@@ -186,42 +182,32 @@ function chargtPopupGrid1() {
         icone.addEventListener("click", async () => {
             alert('Image va être supprimée !');
             const id = icone.getAttribute("workid");
-            figure.remove(); // Suppression du conteneur
+            
             
             const userData = window.localStorage.getItem('user')
             //const token = JSON.parse(userData).token;
             let token = sessionStorage.getItem("logging");
             
             try {
-                const response = await fetch(`http://localhost:5678/api/works/${id}`, {
-                    method: "DELETE",
-                    headers: { 
-                         'Authorization': `Bearer ${token}`,
-                         'Content-Type': 'application/json'
-                    }
-                }); //fin du fetch
-           
-                //console.log("Reponse du delete : " + response);
-                             
-                if (response.ok) {
-                    statous.textContent = "Delete effectué avec succès !";
-                    statous.style.color = "green";
-                    //console.log("Reponse du delete-OK : " + response.ok);       
-                 } else {
-                    statous.textContent = "Erreur lors de delete work";
-                    statous.style.color = "red";
-                    //console.log("Reponse du delete-KO : " + response.status);
+            const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+                method: "DELETE",
+                headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                 }
+            }); //fin du fetch
+                            
+            if (response.ok) {
+                statous.textContent = "Delete effectué avec succès !";
+                statous.style.color = "green";
+                window.localStorage.removeItem('works'); // Nettoyage "works" dans local Storage
+                figure.remove(); // Suppression du conteneur 04-06-26 (retassement !)
+                //loadGrilles();     // Rechargement grilles maxi et mini
+            }
             }   catch (error) {
-                statous.textContent = "Erreur : " + errorMessage;
-                statous.style.color = "red";
-                //console.log("Reponse du delete-Other");
+                return
             }
              
-            // Suppression de élément du tableau works
-            let workTab = works.filter(work => work.id != id);
-            works = workTab;
-            afficherGalery(); 
         }); //fin de icone "click"  
     } 
     
@@ -269,12 +255,10 @@ function controleData() {
     if (! isValid) {
         errorMessage.classList.add("rouge");
         errorMessage.classList.remove("vert");
-        errorMessage.textContent = messErreur.join(); 
+        errorMessage.textContent = messErreur.join(); //un seul message
         submitBtn.classList.remove("enabled");
-        submitBtn.classList.add("remplir");
-        //console.log("submitBtn au rouge !!!");
+        submitBtn.classList.add("remplir");;
     } else {
-        //console.log("submitBtn au green !!!");
         submitBtn.classList.remove("remplir");
         submitBtn.classList.add("enabled"); 
         statous.textContent = "Appuyez sur Valider pour insérer";
@@ -336,9 +320,9 @@ function erreur(message) {
 }
        
 /* ---------------------------------------------------------------------------------------------*/
-/* --------------------------------------- Procécures Evenementielles --------------------------*/
+/* ----------------------------------- Procécures Evenementielles ------------------------------*/
 /* ---------------------------------------------------------------------------------------------*/
-// ------------------------------------------ Gestion des Ecouteurs ----------------------------//
+// ------------------------------------- Gestion des Ecouteurs ---------------------------------//
 
 
 //--------- Click sur icone "edition" et - SUR -- (Backg sombre) --// 
@@ -346,25 +330,27 @@ function erreur(message) {
 let edition = document.getElementById("fenetre");  
 edition.addEventListener("click", (event) => { 
         
-        boiteModal.classList.remove("hidden");
-        
-        let inputa = document.querySelector("#contact textarea");
-        let inputt = document.querySelector("#contact input[type='text']");
-        let inputm = document.querySelector("#contact input[type='email']");
-                
-        document.querySelector(".popup-content2").classList.add("hidden");
-        document.querySelector(".popup-content1").classList.remove("hidden"); // Modale devient actif
-
-        galery.setAttribute("display","flex");
-
-        chargtCategories();                                 
-         
-        chargtPopupGrid1();   
+    boiteModal.classList.remove("hidden");
+    
+    let inputa = document.querySelector("#contact textarea");
+    let inputt = document.querySelector("#contact input[type='text']");
+    let inputm = document.querySelector("#contact input[type='email']");
             
-        boiteModal.style.visibility = "visible";  
-        boiteModal.scrollTop = boiteModal.scrollHeight;  
-        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";  
-        boiteModal.focus();        
+    document.querySelector(".popup-content2").classList.add("hidden");
+    document.querySelector(".popup-content1").classList.remove("hidden"); // Modale devient actif
+
+    galery.setAttribute("display","flex");
+
+    chargtCategories();                                 
+    
+    let works = JSON.parse(localStorage.getItem("works"));
+
+    chargtPopupGrid1(works);  
+
+    boiteModal.style.visibility = "visible";  
+    boiteModal.scrollTop = boiteModal.scrollHeight;  
+    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";  
+    boiteModal.focus();        
              
 });  // Fin d'exécution de la 1er modale
 
@@ -425,24 +411,12 @@ formulaire.addEventListener("submit", async (event) => {
 
     controleData();
     
-    let userEnr = window.localStorage.getItem('user');
-    let userParse = JSON.parse(userEnr);
-    let useridIsrt = userParse.userId;
+
     let tokenIsrt  = sessionStorage.getItem("logging");
-    let optCateg = document.querySelector("#lstcateg");
-    let imageUrlIsrt =   fileInput.files[0].name;
+
     let categoryIdIsrt = isrtCateg.id
-    let categoryNameIsrt = isrtCateg.name;
-    /*
-    console.log("user parse : "  + userParse);
-    console.log("token Isrt : "  + tokenIsrt);
-    console.log("userid Isrt : " + useridIsrt);
-    console.log("title Isrt : " + titleInput.value.trim()); 
-    console.log("imageUrl Isrt : " + imageUrlIsrt);       
-    console.log("categoryId Isrt : " + categoryIdIsrt);
-    console.log("categoryName Isrt : " + categoryNameIsrt); */
-    /*t objCategory = {"id":categoryIdIsrt, "name": categoryNameIsrt};
-    */                                // Retabli au 21-01-26
+    
+    
     let fdWork = new FormData(); 
     fdWork.append("title", titleInput.value.trim());
     fdWork.append("image", fileInput.files[0]);
@@ -458,11 +432,33 @@ formulaire.addEventListener("submit", async (event) => {
         });
         
         if (response.ok) {
+            const nouveauWork = await response.json();
+
+            console.log("Work créé :", nouveauWork);
+            console.log("ID créé :", nouveauWork.id);
             statous.textContent = "Fichier enregistré avec succès !";
             statous.style.color = "green";
             window.localStorage.removeItem('works'); // Nettoyage "works" dans local Storage
             
-            loadGrilles();     // Rechargement grilles maxi et mini
+            const projet = nouveauWork;
+            const figure = document.createElement("div");
+            figure.classList.add("divrelate");
+            
+            const image = document.createElement("img");
+            image.setAttribute("object-fit","cover");
+            image.src = projet.imageUrl;
+                
+            const icone = document.createElement("i");
+            icone.setAttribute("workid",`${projet.id}`);
+            icone.classList.add("fas", "fa-trash-can", "trash-icon");
+            const icodiv = document.createElement("div");
+            icodiv.classList.add("divicone");
+            icodiv.appendChild(icone);
+            figure.appendChild(image);
+            figure.appendChild(icodiv);
+            galery.appendChild(figure);
+             
+            //loadGrilles();     // Rechargement grilles maxi et mini
         
             resetUpload();
             initloadImg();

@@ -3,8 +3,8 @@ export async function chargerWorks() {
 //async function chargerWorks() {
 
     let wlstWorks = localStorage.getItem("works");
-
-    if (! wlstWorks) {
+    wlstWorks = "";
+    if ((! wlstWorks) || (wlstWorks === null)) {
 
         //const response = await fetch("http://localhost:5678/api/works");
         //const jsWorks = await response.json();
@@ -22,8 +22,8 @@ export async function chargerCategories() {
 //async function chargerCategories() {
 
     let wlstCategories = localStorage.getItem("categories");
-
-    if (! wlstCategories) {
+    wlstCategories = "";
+    if ((! wlstCategories) || (wlstCategories === null))  {
 
         //const response = await fetch("http://localhost:5678/api/categories");
         //const jsCategories = await response.json();
@@ -34,6 +34,3 @@ export async function chargerCategories() {
         console.log("Test works local store :  + chargeCategories");
     }
 }
-
-//const menuLog = document.getElementById("menuIndex");
-//const portfolio = document.getElementById("portfolio");

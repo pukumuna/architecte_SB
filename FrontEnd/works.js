@@ -22,7 +22,71 @@ let galery = document.querySelector(".maxGallery");
 
 let works = "";
 
-async function misefTravaux() {
+//recherche et affichage tous travaux dans Grille
+extractAfficheTravaux();
+
+//-------------------------------------------------------------------------------------------------//
+//----- Affichage dynamique catégorie Pour permettre Filtrage par (catégotie) de travaux  ---------//
+//------------------------- si utilisateur non connecté comme Admmistrateur   ---------------------//
+//-------------------------------------------------------------------------------------------------//
+
+//Voir d'abord si categories existent ds WLST sinon extraire
+//categories de la base, enregistrement dans WLST 
+chargerCategories();
+
+let categories = JSON.parse(localStorage.getItem('categories'));
+//console.log("Test categories name : " +categories[0].name);
+
+let categFiltre = document.querySelector(".categFiltre"); /* Stockage de toutes les categories à afficher ss forme de "div" */ 
+//D'abord Catégories "Tous"                                  /* Sous forme des liens "a" chacun dans une "div" */ 
+//let categDiv  = document.createElement("div");
+let categLien = document.createElement("a");
+categLien.href="#"; //Ces 5 lignes attributs du lien <a...>
+categLien.id = "tous";
+categLien.dataset.name = "Tous"; 
+categLien.innerText = "Tous";
+categLien.classList.add("categActive"); //Affichage en vert
+categLien.classList.add("categNormal"); // 
+//categDiv.appendChild(categLien);
+//categFiltre.appendChild(categDiv);
+categFiltre.appendChild(categLien);
+//Ensuite autres Catégories "Objets", ...
+for (let i=0; i < categories.length; i++) {
+    let categorie = categories[i];
+    //let categDiv  = document.createElement("div");
+    let categLien = document.createElement("a");
+    categLien.href = "#";
+    categLien.id = categorie.name;
+    categLien.innerText = categorie.name;
+    categLien.dataset.name = categorie.name;   
+    categLien.classList.add("categNormal");
+    ajoutLister(categorie.name);
+
+    categFiltre.appendChild(categLien);
+    
+    ajoutLister();
+
+    categLien.addEventListener ("click", (event) => {
+        console.log("Categorie active " + event.target.dataset.name); 
+        categLien.classList.add("categActive"); // lien cliqué a la "categActive"
+        // Appel fonction "filtreObjects" avec [dataset.name = name de la catégorie]   
+        filtreObjects(event.target.dataset.name);
+        let categorieName = event.target.dataset.name;
+        let liensCateg = document.querySelectorAll(".categFiltre a"); // Select tous liens de la section
+        for (let j=0; j < liensCateg.length; j++) { // remove "categActive" aux autres liens
+                     
+            if ( !(liensCateg[j].dataset.name === categorieName) ) {
+                liensCateg[j].classList.add("categNormal");
+                liensCateg[j].classList.remove("categActive");        
+            }
+        };
+        categLien.href = "#`${event.target.dataset.name}`";
+    })
+}
+
+//Voir d'abord si travaux existent ds WLST sinon extraire
+//travaux de la base, enregistrement dans WLST et afficher travaux 
+async function extractAfficheTravaux() {
 
    await chargerWorks();
     
@@ -31,7 +95,26 @@ async function misefTravaux() {
    afficherTravaux(works); 
 }
 
-misefTravaux();
+//Ajout AddEventListener
+function ajoutLister() {
+       
+    categLien.addEventListener ("click", (event) => {
+        console.log("Categorie active " + event.target.dataset.name); 
+        categLien.classList.add("categActive"); // lien cliqué a la "categActive"
+        // Appel fonction "filtreObjects" avec [dataset.name = name de la catégorie]   
+        filtreObjects(event.target.dataset.name);
+        let categorieName = event.target.dataset.name;
+        let liensCateg = document.querySelectorAll(".categFiltre a"); // Select tous liens de la section
+        for (let j=0; j < liensCateg.length; j++) { // remove "categActive" aux autres liens
+                     
+            if ( !(liensCateg[j].dataset.name === categorieName) ) {
+                liensCateg[j].classList.add("categNormal");
+                liensCateg[j].classList.remove("categActive");        
+            }
+        };
+        categLien.href = "#`${event.target.dataset.name}`";
+    })
+}
 
 //Affichage dynamique de la liste des Travaux de Architecte
 function afficherTravaux(projets) {
@@ -57,88 +140,13 @@ function afficherTravaux(projets) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------//
-//----- Affichage dynamique catégorie Pour permettre Filtrage par (catégotie) de travaux  ---------//
-//------------------------- si utilisateur non connecté comme Admmistrateur   ---------------------//
-//-------------------------------------------------------------------------------------------------//
-
-//nsole.log("appelle chargerCategories de la BD");
-chargerCategories();
-
-let categories = JSON.parse(localStorage.getItem('categories'));
-//console.log("Test categories name : " +categories[0].name);
-
-let categFiltre = document.querySelector(".categFiltre"); /* Stockage de toutes les categories à afficher ss forme de "div" */ 
-//D'abord Catégories "Tous"                                  /* Sous forme des liens "a" chacun dans une "div" */ 
-let categDiv  = document.createElement("div");
-let categLien = document.createElement("a");
-categLien.href="#"; //Ces 5 lignes attributs du lien <a...>
-categLien.id = "tous";
-categLien.dataset.name = "Tous"; 
-categLien.innerText = "Tous";
-categLien.classList.add("categActive");
-categLien.classList.add("categNormal");
-categDiv.appendChild(categLien);
-categFiltre.appendChild(categDiv);
-//Ensuite autres Catégories "Objets", ...
-for (let i=0; i < categories.length; i++) {
-    let categorie = categories[i];
-    let categDiv  = document.createElement("div");
-    let categLien = document.createElement("a");
-    categLien.href = "#";
-    categLien.id = categorie.name;
-    categLien.innerText = categorie.name;
-    categLien.dataset.name = categorie.name;   
-    categLien.classList.add("categNormal");
-    categDiv.appendChild(categLien);
-    categFiltre.appendChild(categDiv);
-}
-
-// Event listener sur categorie clicquée | Ctrl en cas de Click / Catégorie
-// Ctrl que l'id du lien correpond à la catégorie de l'élément
- 
-const liensCateg = document.querySelectorAll(".categFiltre a"); // Selection des liens de la section
-//Scan de tous les liens "liensCateg" pour les mettre à l'écoute et savoir lequel a été cliqué
-for (let i=0; i < liensCateg.length; i++) {
-    let categLien = liensCateg[i];
-    categLien.addEventListener ("click", (event) => {
-        categLien.classList.add("categActive"); // lien cliqué a la "categActive"
-        // Appel fonction "filtreObjects" avec [dataset.name = name de la catégorie]    
-        filtreObjects(event.target.dataset.name);
-        let categorieName = event.target.dataset.name;
-        for (let j=0; j < liensCateg.length; j++) { // remove "categActive" aux autres liens
-            let lienCateg = liensCateg[j];            
-            if (!(lienCateg.dataset.name === categorieName)) {
-                lienCateg.classList.remove("categActive");        
-            }
-        };
-        categLien.href = "#`${event.target.dataset.name}`";
-    })
-} 
-
 // Filtre objets - works - sur la categorie selectionnee
 function filtreObjects(name) { // "name" = event.target.dataset.name
     if (name === "Tous") {
-        afficherTravaux(works);
+        extractAfficheTravaux();
     } else {
       const worksFiltres =  
       works.filter(obj => obj.category.name === name);
       afficherTravaux(worksFiltres);
-      /*for (let k=0; k < worksFiltres.length; k++) {
-        console.log(name + ":" + worksFiltres[k].title );
-      } */
     }
   }
- 
-
-  // Initialisation du lien de categorie'Tous' comme "lien actif"
-  // en cas de click sur nav Projets
-  const aHeader = document.querySelector("header a[href='#Projets']");
-  aHeader.addEventListener("click", (event) => {
-    const initFiltre = document.querySelectorAll(".categFiltre a");
-    initFiltre[0].classList.add("categActive");
-    for (let i=1; i < initFiltre.length; i++) {
-        initFiltre[i].classList.remove("categActive");
-    }
-  }) 
-  
