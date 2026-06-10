@@ -37,19 +37,22 @@ chargerCategories();
 let categories = JSON.parse(localStorage.getItem('categories'));
 //console.log("Test categories name : " +categories[0].name);
 
-let categFiltre = document.querySelector(".categFiltre"); /* Stockage de toutes les categories à afficher ss forme de "div" */ 
-//D'abord Catégories "Tous"                                  /* Sous forme des liens "a" chacun dans une "div" */ 
-//let categDiv  = document.createElement("div");
+let categFiltre = document.querySelector(".categFiltre"); /* Stockage de toutes les categories */
+//D'abord Catégories "Tous"                               /* Sous forme des liens "a"  */
+ 
 let categLien = document.createElement("a");
-categLien.href="#"; //Ces 5 lignes attributs du lien <a...>
-categLien.id = "tous";
+//categLien.href="#"; //Ces 5 lignes attributs du lien <a...>
+categLien.href = "#Tous";
+categLien.id = "Tous";
 categLien.dataset.name = "Tous"; 
 categLien.innerText = "Tous";
 categLien.classList.add("categActive"); //Affichage en vert
 categLien.classList.add("categNormal"); // 
-//categDiv.appendChild(categLien);
-//categFiltre.appendChild(categDiv);
+
 categFiltre.appendChild(categLien);
+
+ajoutLister("Tous");
+
 //Ensuite autres Catégories "Objets", ...
 for (let i=0; i < categories.length; i++) {
     let categorie = categories[i];
@@ -60,28 +63,10 @@ for (let i=0; i < categories.length; i++) {
     categLien.innerText = categorie.name;
     categLien.dataset.name = categorie.name;   
     categLien.classList.add("categNormal");
+
     ajoutLister(categorie.name);
 
     categFiltre.appendChild(categLien);
-    
-    ajoutLister();
-
-    categLien.addEventListener ("click", (event) => {
-        console.log("Categorie active " + event.target.dataset.name); 
-        categLien.classList.add("categActive"); // lien cliqué a la "categActive"
-        // Appel fonction "filtreObjects" avec [dataset.name = name de la catégorie]   
-        filtreObjects(event.target.dataset.name);
-        let categorieName = event.target.dataset.name;
-        let liensCateg = document.querySelectorAll(".categFiltre a"); // Select tous liens de la section
-        for (let j=0; j < liensCateg.length; j++) { // remove "categActive" aux autres liens
-                     
-            if ( !(liensCateg[j].dataset.name === categorieName) ) {
-                liensCateg[j].classList.add("categNormal");
-                liensCateg[j].classList.remove("categActive");        
-            }
-        };
-        categLien.href = "#`${event.target.dataset.name}`";
-    })
 }
 
 //Voir d'abord si travaux existent ds WLST sinon extraire
@@ -96,8 +81,8 @@ async function extractAfficheTravaux() {
 }
 
 //Ajout AddEventListener
-function ajoutLister() {
-       
+function ajoutLister(id) {
+    let categLien = document.getElementById(id)
     categLien.addEventListener ("click", (event) => {
         console.log("Categorie active " + event.target.dataset.name); 
         categLien.classList.add("categActive"); // lien cliqué a la "categActive"
