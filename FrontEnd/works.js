@@ -64,9 +64,9 @@ for (let i=0; i < categories.length; i++) {
     categLien.dataset.name = categorie.name;   
     categLien.classList.add("categNormal");
 
-    ajoutLister(categorie.name);
-
     categFiltre.appendChild(categLien);
+
+    ajoutLister(categorie.name);
 }
 
 //Voir d'abord si travaux existent ds WLST sinon extraire
@@ -134,4 +134,4 @@ function filtreObjects(name) { // "name" = event.target.dataset.name
       works.filter(obj => obj.category.name === name);
       afficherTravaux(worksFiltres);
     }
-  }
+}
